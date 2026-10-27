@@ -1,259 +1,270 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#171a16">
-<title>BCSO | Tactical Command</title>
+<title>BCSO Tactical Command</title>
 <style>
-:root {
-  --bg: #11130f;
-  --panel: #1b1e18;
-  --panel2: #22261e;
-  --olive: #626b43;
-  --khaki: #c5bd98;
-  --text: #ecece3;
-  --muted: #969b8d;
-  --border: #34382d;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
-}
-.layout { display: flex; min-height: 100vh; }
-.sidebar {
-  width: 245px;
-  padding: 28px 17px;
-  background: #171a15;
-  border-right: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.brand {
-  padding: 0 10px 26px;
-  border-bottom: 1px solid var(--border);
-}
-.brand-mark {
-  width: 48px; height: 48px;
-  display: grid; place-items: center;
-  background: var(--olive);
-  color: white; font-size: 22px;
-  font-weight: 900; border-radius: 8px;
-  margin-bottom: 14px;
-}
-.brand h1 { font-size: 19px; letter-spacing: 2px; margin: 0; }
-.brand p { color: var(--khaki); font-size: 10px; letter-spacing: 2px; }
-.nav-label {
-  margin: 27px 10px 10px;
-  font-size: 10px; letter-spacing: 2px; color: var(--muted);
-}
-.nav button {
-  display: block; width: 100%;
-  text-align: left; border: 0;
-  background: transparent; color: #bfc2b6;
-  padding: 13px 12px; margin: 3px 0;
-  border-radius: 5px; cursor: pointer; font-size: 13px;
-}
-.nav button:hover, .nav button.active {
-  background: #303628; color: #fff;
-  border-left: 3px solid var(--khaki);
-}
-.sidebar-bottom {
-  margin: 35px 10px 0; font-size: 11px; color: var(--muted);
-}
-main { flex: 1; min-width: 0; }
-.topbar {
-  height: 72px; display: flex; align-items: center;
-  justify-content: space-between; gap: 12px;
-  padding: 0 30px; border-bottom: 1px solid var(--border);
-  background: #171a15;
-}
-.topbar small { color: var(--muted); letter-spacing: 1px; }
-.pill {
-  border: 1px solid #48513a; background: #252d20;
-  color: #c7d3b5; padding: 8px 11px;
-  border-radius: 4px; font-size: 11px;
-}
-.content { max-width: 1200px; padding: 32px; margin: auto; }
-.eyebrow { color: var(--khaki); font-size: 11px; letter-spacing: 2px; }
-h2 { font-size: clamp(25px,4vw,35px); margin: 10px 0; }
-.subtitle { color: var(--muted); font-size: 14px; line-height: 1.6; }
-.banner {
-  margin: 25px 0; padding: 22px;
-  border: 1px solid #424735;
-  background: linear-gradient(110deg,#292f22,#1b1e18);
-  border-radius: 8px; display: flex;
-  align-items: center; justify-content: space-between; gap: 18px;
-}
-.banner strong { font-size: 14px; letter-spacing: 1px; }
-.banner p { margin-bottom: 0; color: var(--muted); font-size: 12px; }
-.banner-symbol { font-size: 32px; color: var(--khaki); }
-.grid {
-  display: grid; grid-template-columns: repeat(4,minmax(0,1fr));
-  gap: 14px; margin: 20px 0 30px;
-}
-.card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 7px; padding: 19px;
-}
-.card-label { color: var(--muted); font-size: 11px; }
-.card-value { font-size: 29px; font-weight: 700; margin: 15px 0 8px; }
-.card-note { color: var(--khaki); font-size: 11px; }
-.section-title { font-size: 14px; letter-spacing: 1px; margin: 28px 0 14px; }
-.activity {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 7px; padding: 5px 20px;
-}
-.activity-row {
-  display: flex; align-items: center; gap: 13px;
-  padding: 17px 0; border-bottom: 1px solid var(--border);
-}
-.activity-row:last-child { border-bottom: 0; }
-.activity-icon {
-  width: 36px; height: 36px; display: grid;
-  place-items: center; border-radius: 5px;
-  background: #303628; color: var(--khaki);
-}
-.activity-row strong { font-size: 12px; }
-.activity-row p { color: var(--muted); font-size: 11px; margin: 5px 0 0; }
-.activity-row time { margin-left: auto; color: var(--muted); font-size: 10px; }
-.page { display: none; }
-.page.active { display: block; }
-.notice {
-  margin-top: 20px; padding: 13px;
-  border-left: 3px solid var(--olive);
-  background: #1c2119; color: var(--muted);
-  font-size: 12px; line-height: 1.6;
-}
-footer { color: var(--muted); font-size: 10px; padding: 28px 0 5px; }
-@media(max-width:900px) {
-  .sidebar { width: 205px; }
-  .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .content { padding: 22px; }
-  .topbar { padding: 0 20px; }
-}
-@media(max-width:620px) {
-  .layout { display: block; }
-  .sidebar { width: 100%; padding: 15px; border-right: 0; border-bottom: 1px solid var(--border); }
-  .brand { display: flex; align-items: center; gap: 12px; padding: 0 0 12px; }
-  .brand-mark { width: 40px; height: 40px; margin: 0; }
-  .brand p { margin-bottom: 0; }
-  .nav-label, .sidebar-bottom { display: none; }
-  .nav { display: flex; overflow-x: auto; gap: 5px; padding-top: 10px; }
-  .nav button { width: auto; white-space: nowrap; padding: 10px; }
-  .topbar { height: 55px; padding: 0 15px; }
-  .content { padding: 20px 15px; }
-  .grid { gap: 9px; }
-  .card { padding: 13px; }
-  .card-value { font-size: 24px; }
-  .banner { padding: 15px; }
-}
+:root{--bg:#10130f;--panel:#181d17;--line:#30392c;--text:#f0f2e9;--muted:#9aa394;--olive:#a8b96a;--olive2:#d4e49a;--green:#5cc69a;--blue:#7cb7ef;--purple:#c0a0f4;--orange:#eab36e;--red:#f08d82}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 70% -10%,#293522 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+.sidebar{border-right:1px solid var(--line);background:#131711f2;padding:24px 16px;display:flex;flex-direction:column;gap:26px}
+.brand{display:flex;align-items:center;gap:12px;padding:0 8px}
+.crest{width:43px;height:48px;background:linear-gradient(145deg,#c8d98b,#73884b);color:#1a2114;clip-path:polygon(50% 0,92% 12%,86% 68%,50% 100%,14% 68%,8% 12%);display:grid;place-items:center;font-weight:950;font-size:12px;letter-spacing:-1px}
+.brand strong{display:block;font-size:14px;letter-spacing:.13em}
+.brand small{color:var(--muted);font-size:10px;letter-spacing:.2em}
+.section-label{padding:0 12px;color:#7f8977;font-size:10px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;margin-bottom:7px}
+.nav{display:grid;gap:5px}
+.nav button{border:1px solid transparent;background:transparent;color:#aeb6a6;padding:11px 12px;border-radius:11px;text-align:left;display:flex;gap:12px;align-items:center;transition:.18s}
+.nav button .ico{width:22px;text-align:center;font-size:17px}
+.nav button:hover{background:#20271e;color:#fff}
+.nav button.active{background:linear-gradient(90deg,#303b25,#232b20);border-color:#465239;color:#e5f1bd;box-shadow:inset 3px 0 #b6cb78}
+.side-bottom{margin-top:auto}
+.server-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(135deg,#20271c,#171c15)}
+.server-card .dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:7px;box-shadow:0 0 10px #5cc69a80}
+.server-card small{color:var(--muted)}
+main{min-width:0;padding:27px clamp(16px,3vw,38px) 42px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px}
+.crumb{color:var(--muted);font-size:12px}
+.crumb b{color:#e8eddc;font-weight:650}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{border:1px solid var(--line);background:#1a2018;color:#dce4d3;border-radius:10px;padding:9px 12px}
+.profile{display:flex;align-items:center;gap:10px;padding-left:8px}
+.avatar{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#d4e49a,#778d4d);color:#172012;font-weight:900}
+.profile small{display:block;color:var(--muted);font-size:11px}
+.eyebrow{font-size:10px;font-weight:850;letter-spacing:.2em;color:var(--olive);text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.eyebrow:before{content:"";width:21px;height:1px;background:var(--olive)}
+h1{font-size:clamp(27px,3vw,38px);letter-spacing:-.04em;margin:9px 0 5px}
+p.sub{margin:0;color:var(--muted)}
+.hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:24px}
+.primary{background:var(--olive2);color:#1c2414;border:0;border-radius:10px;padding:11px 15px;font-weight:800;box-shadow:0 6px 20px #a8b96a17}
+.primary:hover{background:#e4f1b7}
+.secondary{background:#232a20;border:1px solid #3b4634;color:#e1e9d5;border-radius:10px;padding:10px 13px;font-weight:650}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.stat{background:linear-gradient(145deg,#1c231a,#171c15);border:1px solid var(--line);border-radius:15px;padding:17px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:80px;height:80px;border-radius:50%;right:-25px;top:-32px;background:var(--glow,#a8b96a);opacity:.09;filter:blur(2px)}
+.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
+.stat-icon{width:31px;height:31px;display:grid;place-items:center;background:#293122;border-radius:9px;color:var(--accent,var(--olive2));font-size:16px}
+.stat strong{display:block;font-size:29px;letter-spacing:-.04em;margin:13px 0 2px}
+.stat small{color:var(--muted);font-size:11px}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.8fr);gap:16px}
+.panel{background:linear-gradient(145deg,#1a2018,#161b14);border:1px solid var(--line);border-radius:16px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 19px;border-bottom:1px solid var(--line)}
+.panel-head h2{margin:0;font-size:15px}
+.panel-head p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:99px;font-size:10px;font-weight:800;white-space:nowrap;border:1px solid transparent}
+.pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.role-admin{color:#e4c17b;background:#3b3020;border-color:#66502c}
+.role-rh{color:#c5a7ff;background:#302540;border-color:#514064}
+.role-lead{color:#8bc6ff;background:#1e3041;border-color:#304e66}
+.role-agent{color:#b4c1ad;background:#283126;border-color:#414d3b}
+.status-active{color:#79d9ac;background:#1b3629;border-color:#2e5b43}
+.status-absence{color:#f2b26e;background:#3c2b1b;border-color:#68462a}
+.division-doa{color:#d0df9a;background:#303a20;border-color:#4c5c31}
+.division-swat{color:#f39b91;background:#3d2422;border-color:#683b37}
+.activity{padding:5px 18px}
+.activity-item{display:flex;gap:12px;padding:15px 0;border-bottom:1px solid #2a3226}
+.activity-item:last-child{border-bottom:0}
+.activity-icon{width:34px;height:34px;flex:none;border-radius:11px;background:#283122;display:grid;place-items:center;color:var(--olive2)}
+.activity-item strong{font-size:12px}
+.activity-item p{font-size:11px;color:var(--muted);margin:3px 0}
+.activity-item time{font-size:10px;color:#788372}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
+.quick{padding:13px;border:1px solid var(--line);border-radius:12px;background:#20271d;text-align:left;color:var(--text)}
+.quick:hover{border-color:#65784b;background:#252e20}
+.quick span{font-size:19px}
+.quick strong{display:block;font-size:12px;margin-top:9px}
+.quick small{color:var(--muted);font-size:10px}
+.page{display:none}
+.page.active{display:block}
+.filters{display:flex;gap:9px;flex-wrap:wrap;padding:14px 17px;border-bottom:1px solid var(--line)}
+.filters input,.filters select,.field input,.field select,.field textarea{background:#11160f;border:1px solid #343e2f;color:var(--text);padding:10px 11px;border-radius:9px;outline:none;min-width:0}
+.filters input{flex:1;min-width:180px}
+.filters select{min-width:140px}
+.filters input:focus,.filters select:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:#82985a;box-shadow:0 0 0 3px #a8b96a18}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{text-align:left;padding:12px 17px;color:#87917f;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;background:#171c14}
+td{padding:14px 17px;border-top:1px solid #2b3327;color:#dfe5d8;font-size:12px}
+tbody tr:hover{background:#20271c}
+.person{display:flex;align-items:center;gap:10px}
+.person-avatar{width:35px;height:35px;border-radius:11px;background:linear-gradient(145deg,#46573b,#283421);display:grid;place-items:center;color:#e2edc2;font-weight:850}
+.person strong{display:block}
+.person small{color:var(--muted);font-size:10px}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10px;padding:4px 7px;border-radius:6px;background:#283024;color:#cbd7bd;border:1px solid #394532}
+.row-actions{border:1px solid #3a4532;background:#242d20;color:#dce6cf;border-radius:7px;padding:6px 9px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+.module-placeholder{padding:40px 22px;text-align:center}
+.module-placeholder .big-icon{font-size:34px}
+.module-placeholder h2{margin:10px 0}
+.module-placeholder p{color:var(--muted);max-width:430px;margin:0 auto 18px}
+.role-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px}
+.role-card{padding:18px;border:1px solid var(--line);border-radius:13px;background:#20271d}
+.role-card h3{margin:10px 0 5px}
+.role-card p{color:var(--muted);font-size:12px;margin:0}
+.role-card .role-icon{font-size:21px}
+.notice{padding:13px 15px;border-radius:11px;background:#272e1f;border:1px solid #465337;color:#d6e4b5;font-size:12px;margin-top:16px}
+.modal-backdrop{position:fixed;inset:0;background:#080a07c9;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal-backdrop.show{display:flex}
+.modal{width:min(700px,100%);max-height:90vh;overflow:auto;background:#1a2018;border:1px solid #46513d;border-radius:18px;box-shadow:0 30px 100px #0009}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{font-size:17px;margin:0}
+.modal-body{padding:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:grid;gap:6px}
+.field label{font-size:11px;color:#b9c4b0;font-weight:700}
+.field input,.field select,.field textarea{width:100%}
+.field.full{grid-column:1/-1}
+.checks{display:flex;flex-wrap:wrap;gap:7px}
+.checks label{background:#252e21;border:1px solid #3d4a33;padding:7px 9px;border-radius:8px;color:#d7e0cc;font-size:11px}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:15px 20px;border-top:1px solid var(--line)}
+.toast{position:fixed;bottom:20px;right:20px;background:#d4e49a;color:#1a2113;padding:12px 16px;border-radius:11px;font-weight:750;box-shadow:0 12px 40px #0007;display:none;z-index:40}
+.toast.show{display:block}
+@media(max-width:1000px){.app{grid-template-columns:210px minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
+@media(max-width:700px){.app{display:block}.sidebar{position:static;padding:13px;gap:13px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:0 3px}.crest{width:36px;height:40px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;padding:9px 11px}.nav button .ico{width:auto}.section-label,.side-bottom{display:none}main{padding:18px 13px 30px}.topbar{margin-bottom:22px}.profile div:last-child{display:none}.hero-row{align-items:flex-start;flex-direction:column}.hero-row .primary{width:100%}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:25px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.role-grid{grid-template-columns:1fr}.panel-head{padding:15px}.top-actions .icon-btn:first-child{display:none}}
 </style>
 </head>
 <body>
-<div class="layout">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">★</div>
-      <div>
-        <h1>BCSO</h1>
-        <p>TACTICAL COMMAND</p>
-      </div>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="crest">BCSO</div><div><strong>TACTICAL COMMAND</strong><small>BLAINE COUNTY SHERIFF</small></div></div>
+  <div><div class="section-label">Opérations</div><nav class="nav" id="nav">
+    <button class="active" data-page="dashboard"><span class="ico">◈</span> Tableau de bord</button>
+    <button data-page="personnel"><span class="ico">♙</span> Personnel</button>
+    <button data-page="vehicles"><span class="ico">▰</span> Véhicules</button>
+    <button data-page="reports"><span class="ico">▤</span> Rapports</button>
+  </nav></div>
+  <div><div class="section-label">Administration</div><nav class="nav">
+    <button data-page="hierarchy"><span class="ico">♜</span> Hiérarchie</button>
+    <button data-page="documents"><span class="ico">▣</span> Documents & sanctions</button>
+    <button data-page="access"><span class="ico">⚙</span> Rôles & permissions</button>
+  </nav></div>
+  <div class="side-bottom"><div class="server-card"><div><span class="dot"></span><strong style="font-size:12px">Système opérationnel</strong></div><small>Interface de démonstration · v0.1</small></div></div>
+</aside>
+<main>
+  <div class="topbar"><div class="crumb">BCSO <span style="color:#65705d">/</span> <b id="crumb">Tableau de bord</b></div><div class="top-actions"><button class="icon-btn" onclick="toast('Les notifications seront connectées plus tard.')">♧</button><button class="icon-btn" onclick="toast('Mode démonstration : aucun compte connecté.')">⌕</button><div class="profile"><div class="avatar">AD</div><div><strong style="font-size:12px">Administrateur</strong><small>Accès démo <span class="pill role-admin" style="margin-left:5px">ADMIN</span></small></div></div></div></div>
+  <section class="page active" id="page-dashboard">
+    <div class="hero-row"><div><div class="eyebrow">Centre de commandement</div><h1>Tableau de bord</h1><p class="sub">Vue d'ensemble des effectifs et des opérations du comté.</p></div><button class="primary" onclick="openModal()">＋ Ajouter un agent</button></div>
+    <div class="stats">
+      <div class="stat" style="--accent:#d4e49a;--glow:#d4e49a"><div class="stat-top">Effectif total <span class="stat-icon">♙</span></div><strong id="stat-total">10</strong><small>Agents enregistrés dans la démo</small></div>
+      <div class="stat" style="--accent:#5cc69a;--glow:#5cc69a"><div class="stat-top">Agents actifs <span class="stat-icon">✓</span></div><strong id="stat-active">8</strong><small>Disponibles actuellement</small></div>
+      <div class="stat" style="--accent:#eab36e;--glow:#eab36e"><div class="stat-top">En absence <span class="stat-icon">◷</span></div><strong id="stat-absence">2</strong><small>Absences déclarées</small></div>
+      <div class="stat" style="--accent:#7cb7ef;--glow:#7cb7ef"><div class="stat-top">Brigades <span class="stat-icon">⬡</span></div><strong>02</strong><small>DOA · SWAT</small></div>
     </div>
-    <div class="nav-label">COMMAND CENTER</div>
-    <nav class="nav">
-      <button class="active" data-page="overview">▦ &nbsp; Vue générale</button>
-      <button data-page="personnel">♙ &nbsp; Personnel</button>
-      <button data-page="vehicles">▰ &nbsp; Véhicules</button>
-      <button data-page="reports">▤ &nbsp; Rapports</button>
-      <button data-page="hierarchy">♜ &nbsp; Hiérarchie</button>
-      <button data-page="documents">▧ &nbsp; Documents & sanctions</button>
-    </nav>
-    <div class="sidebar-bottom">BLAINE COUNTY<br>SHERIFF'S OFFICE</div>
-  </aside>
-
-  <main>
-    <header class="topbar">
-      <small>BCSO / INTERNAL SYSTEM</small>
-      <span class="pill">● &nbsp; INTERFACE DE DÉMONSTRATION</span>
-    </header>
-
-    <div class="content">
-      <section class="page active" id="overview">
-        <div class="eyebrow">BLAINE COUNTY · SHERIFF'S OFFICE</div>
-        <h2>Centre de commandement</h2>
-        <p class="subtitle">Bienvenue dans votre espace de gestion opérationnelle.</p>
-
-        <div class="banner">
-          <div>
-            <strong>SYSTÈME BCSO INITIALISÉ</strong>
-            <p>Interface locale prête · Données de démonstration uniquement</p>
-          </div>
-          <div class="banner-symbol">★</div>
-        </div>
-
-        <div class="grid">
-          <div class="card"><div class="card-label">EFFECTIFS</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
-          <div class="card"><div class="card-label">VÉHICULES</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
-          <div class="card"><div class="card-label">RAPPORTS</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
-          <div class="card"><div class="card-label">SANCTIONS</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
-        </div>
-
-        <h3 class="section-title">APERÇU DU SYSTÈME</h3>
-        <div class="activity">
-          <div class="activity-row"><div class="activity-icon">♙</div><div><strong>Gestion du personnel</strong><p>Profils, grades et affectations</p></div></div>
-          <div class="activity-row"><div class="activity-icon">▰</div><div><strong>Parc automobile</strong><p>Véhicules et disponibilité</p></div></div>
-          <div class="activity-row"><div class="activity-icon">▤</div><div><strong>Administration</strong><p>Rapports, documents et sanctions</p></div></div>
-        </div>
-        <div class="notice">Cette première version est une maquette d'interface. Elle ne stocke aucune donnée et ne constitue pas encore un système de connexion sécurisé.</div>
-      </section>
-
-      <section class="page" id="personnel">
-        <div class="eyebrow">RESSOURCES HUMAINES</div><h2>Gestion du personnel</h2>
-        <p class="subtitle">Profils, grades et affectations des membres du BCSO.</p>
-        <div class="notice">Le module personnel sera ajouté dans une prochaine étape.</div>
-      </section>
-
-      <section class="page" id="vehicles">
-        <div class="eyebrow">FLOTTE DU DÉPARTEMENT</div><h2>Véhicules</h2>
-        <p class="subtitle">Inventaire et suivi des véhicules de service.</p>
-        <div class="notice">Le module véhicules sera ajouté dans une prochaine étape.</div>
-      </section>
-
-      <section class="page" id="reports">
-        <div class="eyebrow">ACTIVITÉ OPÉRATIONNELLE</div><h2>Rapports</h2>
-        <p class="subtitle">Registre des interventions et comptes rendus.</p>
-        <div class="notice">Le module rapports sera ajouté dans une prochaine étape.</div>
-      </section>
-
-      <section class="page" id="hierarchy">
-        <div class="eyebrow">ORGANISATION</div><h2>Hiérarchie</h2>
-        <p class="subtitle">Grades, responsabilités et chaîne de commandement.</p>
-        <div class="notice">Le module hiérarchie sera ajouté dans une prochaine étape.</div>
-      </section>
-
-      <section class="page" id="documents">
-        <div class="eyebrow">ADMINISTRATION</div><h2>Documents & sanctions</h2>
-        <p class="subtitle">Dossiers administratifs et suivi disciplinaire.</p>
-        <div class="notice">Le module documents et sanctions sera ajouté dans une prochaine étape.</div>
-      </section>
-
-      <footer>BCSO · TACTICAL COMMAND · FICTIONAL ROLEPLAY SYSTEM</footer>
+    <div class="layout">
+      <div class="panel"><div class="panel-head"><div><h2>Effectifs récents</h2><p>Annuaire trié par ordre hiérarchique</p></div><button class="secondary" onclick="showPage('personnel')">Voir l'annuaire ↗</button></div><div class="table-wrap"><table><thead><tr><th>Agent</th><th>Grade</th><th>Brigade</th><th>Statut</th></tr></thead><tbody id="dashboard-people"></tbody></table></div></div>
+      <div class="panel"><div class="panel-head"><div><h2>Accès rapides</h2><p>Actions courantes</p></div></div><div class="quick-grid">
+        <button class="quick" onclick="openModal()"><span>♙</span><strong>Ajouter un agent</strong><small>Nouvelle fiche personnel</small></button>
+        <button class="quick" onclick="showPage('vehicles')"><span>▰</span><strong>Parc véhicules</strong><small>Attributions et suivi</small></button>
+        <button class="quick" onclick="showPage('reports')"><span>▤</span><strong>Rapports</strong><small>Suivi des opérations</small></button>
+        <button class="quick" onclick="showPage('access')"><span>⚙</span><strong>Permissions</strong><small>Rôles et accès</small></button>
+      </div><div class="panel-head"><div><h2>Activité récente</h2><p>Exemples visuels uniquement</p></div></div><div class="activity">
+        <div class="activity-item"><div class="activity-icon">＋</div><div><strong>Nouvelle fiche préparée</strong><p>Module Personnel en mode démo.</p><time>À l'instant</time></div></div>
+        <div class="activity-item"><div class="activity-icon">◇</div><div><strong>Hiérarchie configurée</strong><p>10 grades classés du plus haut au plus bas.</p><time>Configuration locale</time></div></div>
+      </div></div>
     </div>
-  </main>
+  </section>
+  <section class="page" id="page-personnel">
+    <div class="hero-row"><div><div class="eyebrow">Gestion des effectifs</div><h1>Personnel</h1><p class="sub">Annuaire, grades, formations et affectations.</p></div><button class="primary" onclick="openModal()">＋ Ajouter un agent</button></div>
+    <div class="panel"><div class="panel-head"><div><h2>Annuaire des agents</h2><p id="directory-count">10 agents · tri hiérarchique automatique</p></div><span class="pill division-doa">DOA / SWAT</span></div>
+      <div class="filters"><input id="search" placeholder="⌕ Rechercher un nom ou matricule…" oninput="renderPeople()"><select id="grade-filter" onchange="renderPeople()"><option value="">Tous les grades</option></select><select id="division-filter" onchange="renderPeople()"><option value="">Toutes les brigades</option><option>DOA</option><option>SWAT</option></select><select id="status-filter" onchange="renderPeople()"><option value="">Tous les statuts</option><option>Actif</option><option>Absence</option></select></div>
+      <div class="table-wrap"><table><thead><tr><th>Matricule / Agent</th><th>Grade</th><th>Brigade</th><th>Spécialisations</th><th>Formations</th><th>Statut</th><th></th></tr></thead><tbody id="people-table"></tbody></table></div>
+    </div>
+    <div class="notice">ⓘ Données fictives de démonstration. Les ajouts sont conservés uniquement dans cette page ouverte ; la base Supabase sera raccordée séparément.</div>
+  </section>
+  <section class="page" id="page-vehicles">
+    <div class="hero-row"><div><div class="eyebrow">Logistique</div><h1>Parc véhicules</h1><p class="sub">Vue de démonstration des véhicules et affectations.</p></div><button class="primary" onclick="toast('Le formulaire véhicules sera ajouté dans une prochaine étape.')">＋ Ajouter un véhicule</button></div>
+    <div class="stats"><div class="stat"><div class="stat-top">Véhicules recensés</div><strong>12</strong><small>Exemple de démonstration</small></div><div class="stat"><div class="stat-top">Disponibles</div><strong>04</strong><small>Non attribués</small></div><div class="stat"><div class="stat-top">DOA</div><strong>05</strong><small>Véhicules attribués</small></div><div class="stat"><div class="stat-top">SWAT</div><strong>03</strong><small>Véhicules attribués</small></div></div>
+    <div class="panel"><div class="panel-head"><div><h2>Inventaire</h2><p>Exemples visuels · données non connectées</p></div></div><div class="table-wrap"><table><thead><tr><th>Véhicule</th><th>Type</th><th>Brigade</th><th>Attribution</th><th>État</th></tr></thead><tbody><tr><td><strong>Scout Cruiser</strong></td><td>Patrouille</td><td><span class="pill division-doa">DOA</span></td><td>Disponible</td><td><span class="pill status-active">Opérationnel</span></td></tr><tr><td><strong>Granger Tactical</strong></td><td>Intervention</td><td><span class="pill division-swat">SWAT</span></td><td>Équipe d'intervention</td><td><span class="pill status-active">Opérationnel</span></td></tr><tr><td><strong>Buffalo Pursuit</strong></td><td>Rapide</td><td><span class="pill division-doa">DOA</span></td><td>Disponible</td><td><span class="pill status-absence">Maintenance</span></td></tr></tbody></table></div></div>
+  </section>
+  <section class="page" id="page-reports">
+    <div class="hero-row"><div><div class="eyebrow">Suivi opérationnel</div><h1>Rapports</h1><p class="sub">Rapports de brigade et historique des opérations.</p></div><button class="primary" onclick="toast('Le formulaire de rapport sera ajouté dans une prochaine étape.')">＋ Nouveau rapport</button></div>
+    <div class="panel"><div class="panel-head"><div><h2>Rapports récents</h2><p>Exemples fictifs pour la maquette</p></div></div><div class="table-wrap"><table><thead><tr><th>Référence</th><th>Objet</th><th>Brigade</th><th>Rédacteur</th><th>État</th></tr></thead><tbody><tr><td><strong>RPT-0261</strong></td><td>Compte rendu de patrouille</td><td><span class="pill division-doa">DOA</span></td><td>Senior Deputy</td><td><span class="pill status-active">Validé</span></td></tr><tr><td><strong>RPT-0260</strong></td><td>Entraînement d'équipe</td><td><span class="pill division-swat">SWAT</span></td><td>Sergeant II</td><td><span class="pill status-absence">Brouillon</span></td></tr><tr><td><strong>RPT-0259</strong></td><td>Rapport d'incident</td><td><span class="pill division-doa">DOA</span></td><td>Deputy II</td><td><span class="pill status-active">Clôturé</span></td></tr></tbody></table></div></div>
+  </section>
+  <section class="page" id="page-hierarchy">
+    <div class="hero-row"><div><div class="eyebrow">Chaîne de commandement</div><h1>Hiérarchie</h1><p class="sub">Grades classés dans l'ordre officiel défini.</p></div></div>
+    <div class="panel"><div class="panel-head"><div><h2>Ordre des grades</h2><p>Du grade le plus élevé au plus bas</p></div><span class="pill role-admin">10 grades</span></div><div class="activity" id="rank-list"></div></div>
+  </section>
+  <section class="page" id="page-documents">
+    <div class="hero-row"><div><div class="eyebrow">Administration</div><h1>Documents & sanctions</h1><p class="sub">Espace prévu pour les documents internes et le suivi administratif.</p></div></div>
+    <div class="panel module-placeholder"><div class="big-icon">▣</div><h2>Un espace prêt à construire</h2><p>Le style général et la navigation sont en place. Les documents, sanctions, archivage et règles de visibilité seront raccordés aux permissions validées.</p><button class="secondary" onclick="toast('Module planifié — pas encore connecté à une base de données.')">Module en préparation</button></div>
+  </section>
+  <section class="page" id="page-access">
+    <div class="hero-row"><div><div class="eyebrow">Contrôle des accès</div><h1>Rôles & permissions</h1><p class="sub">Aperçu des profils d'accès prévus pour la version connectée.</p></div></div>
+    <div class="role-grid">
+      <div class="role-card"><span class="pill role-admin">ADMINISTRATION</span><div class="role-icon">🛡️</div><h3>Administration</h3><p>Accès global, gestion des comptes, permissions, archivage et restauration.</p></div>
+      <div class="role-card"><span class="pill role-rh">RESSOURCES HUMAINES</span><div class="role-icon">👥</div><h3>RH</h3><p>Fiches employés, grades, formations, absences et création de comptes.</p></div>
+      <div class="role-card"><span class="pill role-lead">RESPONSABLE</span><div class="role-icon">🎯</div><h3>Responsable de brigade</h3><p>Personnel, véhicules et rapports limités à sa brigade.</p></div>
+      <div class="role-card"><span class="pill role-agent">AGENT</span><div class="role-icon">♙</div><h3>Agent</h3><p>Annuaire complet en lecture seule, sans notes internes ni données sensibles.</p></div>
+    </div><div class="notice">Les rôles sont présentés ici à titre visuel. Les vrais contrôles d'accès ne seront actifs qu'après la configuration sécurisée de Supabase.</div>
+  </section>
+</main>
 </div>
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h2>Nouvelle fiche employé</h2><button class="icon-btn" onclick="closeModal()">✕</button></div><form id="employee-form"><div class="modal-body"><div class="form-grid">
+  <div class="field"><label>Nom et prénom *</label><input name="name" required placeholder="Ex. Alex Martin"></div>
+  <div class="field"><label>Matricule manuel unique *</label><input name="badge" required placeholder="Ex. BCSO-014"></div>
+  <div class="field"><label>Grade *</label><select name="grade" id="new-grade" required></select></div>
+  <div class="field"><label>Brigade *</label><select name="division" required><option>DOA</option><option>SWAT</option></select></div>
+  <div class="field"><label>Date de naissance</label><input name="birth" type="date"></div>
+  <div class="field"><label>Date d'embauche</label><input name="hire" type="date"></div>
+  <div class="field"><label>ID en jeu</label><input name="gameid" placeholder="ID joueur"></div>
+  <div class="field"><label>ID Discord</label><input name="discord" placeholder="ID Discord"></div>
+  <div class="field"><label>Statut</label><select name="status" id="new-status" onchange="toggleAbsence()"><option>Actif</option><option>Absence</option></select></div>
+  <div class="field"><label>Photo — URL</label><input name="photo" placeholder="https://…"></div>
+  <div class="field" id="absence-start" style="display:none"><label>Début d'absence</label><input name="absenceStart" type="date"></div>
+  <div class="field" id="absence-end" style="display:none"><label>Fin d'absence</label><input name="absenceEnd" type="date"></div>
+  <div class="field full"><label>Formations</label><div class="checks" id="formation-checks"></div></div>
+  <div class="field full"><label>Spécialisations</label><div class="checks" id="specialty-checks"></div></div>
+  <div class="field full"><label>Notes internes (démo uniquement)</label><textarea name="notes" rows="2" style="background:#11160f;border:1px solid #343e2f;color:#f0f2e9;border-radius:9px;padding:10px" placeholder="Notes réservées aux rôles autorisés"></textarea></div>
+  </div></div><div class="modal-foot"><button type="button" class="secondary" onclick="closeModal()">Annuler</button><button type="submit" class="primary">Créer la fiche</button></div></form></div></div>
+<div class="toast" id="toast"></div>
 <script>
-document.querySelectorAll("[data-page]").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll("[data-page]").forEach(item => item.classList.remove("active"));
-    document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
-    button.classList.add("active");
-    document.getElementById(button.dataset.page).classList.add("active");
-  });
-});
+const grades=["Sheriff","Undersheriff","Lieutenant","Sergeant II","Sergeant I","Senior Deputy","Deputy III","Deputy II","Deputy I","Deputy Trainee"];
+const formations=["Procédure","Radio","MDT","Négociateur","Lead Terrain","Lead OP","First Lincoln","Conduite","Dispatcher","PPA I","PPA II","PPA III","PPA IV","PPA V"];
+const specialties=["Air Support Unit","K-9 Unit","Trafic Division","Marine Unit","Media Relation Division","Recruteur Formateur"];
+let people=[
+{name:"Morgan Hale",badge:"BCSO-001",grade:"Sheriff",division:"DOA",status:"Actif",specialties:["Recruteur Formateur"],formations:["Procédure","Radio","MDT"]},
+{name:"Jordan Blake",badge:"BCSO-002",grade:"Undersheriff",division:"SWAT",status:"Actif",specialties:["Air Support Unit"],formations:["Radio","Lead Terrain"]},
+{name:"Taylor Brooks",badge:"BCSO-004",grade:"Lieutenant",division:"DOA",status:"Actif",specialties:["Trafic Division"],formations:["Procédure","PPA IV"]},
+{name:"Riley Carter",badge:"BCSO-007",grade:"Sergeant II",division:"SWAT",status:"Actif",specialties:["K-9 Unit"],formations:["Conduite","Lead OP"]},
+{name:"Casey Reed",badge:"BCSO-009",grade:"Sergeant I",division:"DOA",status:"Absence",specialties:["Marine Unit"],formations:["Radio","Dispatcher"]},
+{name:"Avery Stone",badge:"BCSO-012",grade:"Senior Deputy",division:"DOA",status:"Actif",specialties:["Media Relation Division"],formations:["MDT","PPA III"]},
+{name:"Cameron Wells",badge:"BCSO-014",grade:"Deputy III",division:"SWAT",status:"Actif",specialties:[],formations:["Procédure","Conduite"]},
+{name:"Quinn Parker",badge:"BCSO-018",grade:"Deputy II",division:"DOA",status:"Actif",specialties:["K-9 Unit"],formations:["Radio","PPA II"]},
+{name:"Drew Foster",badge:"BCSO-021",grade:"Deputy I",division:"SWAT",status:"Absence",specialties:[],formations:["Procédure"]},
+{name:"Skyler Hayes",badge:"BCSO-027",grade:"Deputy Trainee",division:"DOA",status:"Actif",specialties:[],formations:[]}
+];
+const rank=g=>grades.indexOf(g);
+const rolePill=(g)=>`<span class="pill ${g==="DOA"?"division-doa":"division-swat"}">${g}</span>`;
+function initials(n){return n.split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase()}
+function personRow(p){return `<tr><td><div class="person"><div class="person-avatar">${initials(p.name)}</div><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.badge)}</small></div></div></td><td><span class="pill role-agent">${escapeHtml(p.grade)}</span></td><td>${rolePill(p.division)}</td><td><div class="tags">${(p.specialties||[]).slice(0,2).map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join("")||'<span style="color:#7e8976">—</span>'}</div></td><td><div class="tags">${(p.formations||[]).slice(0,2).map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join("")||'<span style="color:#7e8976">—</span>'}</div></td><td><span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${p.status}</span></td><td><button class="row-actions" onclick="viewPerson('${p.badge}')">Voir</button></td></tr>`}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function sortedPeople(arr){return [...arr].sort((a,b)=>rank(a.grade)-rank(b.grade)||a.name.localeCompare(b.name,"fr"))}
+function renderPeople(){
+ const q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("grade-filter")?.value||"",d=document.getElementById("division-filter")?.value||"",s=document.getElementById("status-filter")?.value||"";
+ const arr=sortedPeople(people).filter(p=>(p.name+" "+p.badge).toLowerCase().includes(q)&&(!g||p.grade===g)&&(!d||p.division===d)&&(!s||p.status===s));
+ document.getElementById("people-table").innerHTML=arr.map(personRow).join("")||'<tr><td colspan="7" class="empty">Aucun agent ne correspond à la recherche.</td></tr>';
+ document.getElementById("directory-count").textContent=`${arr.length} agent${arr.length>1?"s":""} affiché${arr.length>1?"s":""} · tri hiérarchique automatique`;
+ document.getElementById("dashboard-people").innerHTML=sortedPeople(people).slice(0,5).map(p=>`<tr><td><div class="person"><div class="person-avatar">${initials(p.name)}</div><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.badge)}</small></div></div></td><td><span class="pill role-agent">${escapeHtml(p.grade)}</span></td><td>${rolePill(p.division)}</td><td><span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${p.status}</span></td></tr>`).join("");
+ document.getElementById("stat-total").textContent=people.length;document.getElementById("stat-active").textContent=people.filter(p=>p.status==="Actif").length;document.getElementById("stat-absence").textContent=people.filter(p=>p.status==="Absence").length;
+}
+function showPage(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("page-"+name)?.classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));const labels={dashboard:"Tableau de bord",personnel:"Personnel",vehicles:"Véhicules",reports:"Rapports",hierarchy:"Hiérarchie",documents:"Documents & sanctions",access:"Rôles & permissions"};document.getElementById("crumb").textContent=labels[name]||name;window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+function openModal(){document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function toggleAbsence(){const on=document.getElementById("new-status").value==="Absence";document.getElementById("absence-start").style.display=on?"grid":"none";document.getElementById("absence-end").style.display=on?"grid":"none";document.querySelector('[name="absenceStart"]').required=on;document.querySelector('[name="absenceEnd"]').required=on}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+function viewPerson(badge){const p=people.find(x=>x.badge===badge);if(p)toast(`${p.name} · ${p.grade} · ${p.division} — mode démo`)}
+document.getElementById("employee-form").addEventListener("submit",e=>{e.preventDefault();const f=new FormData(e.target),name=String(f.get("name")).trim(),badge=String(f.get("badge")).trim();if(people.some(p=>p.badge.toLowerCase()===badge.toLowerCase())){toast("Ce matricule existe déjà.");return}if(f.get("status")==="Absence"&&(!f.get("absenceStart")||!f.get("absenceEnd"))){toast("Indique les dates de début et de fin d'absence.");return}
+const picked=id=>[...document.querySelectorAll(`#${id} input:checked`)].map(x=>x.value);
+people.push({name,badge,grade:f.get("grade"),division:f.get("division"),status:f.get("status"),specialties:picked("specialty-checks"),formations:picked("formation-checks"),birth:f.get("birth"),hire:f.get("hire"),gameid:f.get("gameid"),discord:f.get("discord"),photo:f.get("photo"),notes:f.get("notes"),absenceStart:f.get("absenceStart"),absenceEnd:f.get("absenceEnd")});
+e.target.reset();toggleAbsence();closeModal();renderPeople();toast("Fiche ajoutée en mémoire locale (démo).")});
+function makeOptions(){const gf=document.getElementById("grade-filter"),ng=document.getElementById("new-grade");grades.forEach(g=>{gf.add(new Option(g,g));ng.add(new Option(g,g))});const build=(id,items)=>document.getElementById(id).innerHTML=items.map(x=>`<label><input type="checkbox" value="${escapeHtml(x)}"> ${escapeHtml(x)}</label>`).join("");build("formation-checks",formations);build("specialty-checks",specialties);document.getElementById("rank-list").innerHTML=grades.map((g,i)=>`<div class="activity-item"><div class="activity-icon">${String(i+1).padStart(2,"0")}</div><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex:1"><strong>${g}</strong><span class="pill role-agent">${i===0?"Commandement":i<3?"Officiers":i<5?"Sous-officiers":"Effectifs"}</span></div></div>`).join("")}
+makeOptions();renderPeople();
 </script>
 </body>
 </html>
