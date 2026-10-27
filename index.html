@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,12 +9,12 @@
 :root{--bg:#10130f;--panel:#181d17;--line:#30392c;--text:#f0f2e9;--muted:#9aa394;--olive:#a8b96a;--olive2:#d4e49a;--green:#5cc69a;--blue:#7cb7ef;--purple:#c0a0f4;--orange:#eab36e;--red:#f08d82}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at 70% -10%,#293522 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
 .sidebar{border-right:1px solid var(--line);background:#131711f2;padding:24px 16px;display:flex;flex-direction:column;gap:26px}
 .brand{display:flex;align-items:center;gap:12px;padding:0 8px}
-.crest{width:43px;height:48px;background:linear-gradient(145deg,#c8d98b,#73884b);color:#1a2114;clip-path:polygon(50% 0,92% 12%,86% 68%,50% 100%,14% 68%,8% 12%);display:grid;place-items:center;font-weight:950;font-size:12px;letter-spacing:-1px}
+.crest{width:43px;height:48px;background:linear-gradient(145deg,#c8d98b,#73884b);color:#1a2114;clip-path:polygon(50% 0,92% 12%,86% 68%,50% 100%,14% 68%,8% 12%);display:grid;place-items:center;font-weight:950;font-size:12px}
 .brand strong{display:block;font-size:14px;letter-spacing:.13em}
 .brand small{color:var(--muted);font-size:10px;letter-spacing:.2em}
 .section-label{padding:0 12px;color:#7f8977;font-size:10px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;margin-bottom:7px}
@@ -24,12 +25,12 @@ button{cursor:pointer}
 .nav button.active{background:linear-gradient(90deg,#303b25,#232b20);border-color:#465239;color:#e5f1bd;box-shadow:inset 3px 0 #b6cb78}
 .side-bottom{margin-top:auto}
 .server-card{padding:13px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(135deg,#20271c,#171c15)}
-.server-card .dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:7px;box-shadow:0 0 10px #5cc69a80}
+.server-card .dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:7px}
 .server-card small{color:var(--muted)}
 main{min-width:0;padding:27px clamp(16px,3vw,38px) 42px}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px}
 .crumb{color:var(--muted);font-size:12px}
-.crumb b{color:#e8eddc;font-weight:650}
+.crumb b{color:#e8eddc}
 .top-actions{display:flex;align-items:center;gap:10px}
 .icon-btn{border:1px solid var(--line);background:#1a2018;color:#dce4d3;border-radius:10px;padding:9px 12px}
 .profile{display:flex;align-items:center;gap:10px;padding-left:8px}
@@ -40,15 +41,14 @@ main{min-width:0;padding:27px clamp(16px,3vw,38px) 42px}
 h1{font-size:clamp(27px,3vw,38px);letter-spacing:-.04em;margin:9px 0 5px}
 p.sub{margin:0;color:var(--muted)}
 .hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:24px}
-.primary{background:var(--olive2);color:#1c2414;border:0;border-radius:10px;padding:11px 15px;font-weight:800;box-shadow:0 6px 20px #a8b96a17}
+.primary{background:var(--olive2);color:#1c2414;border:0;border-radius:10px;padding:11px 15px;font-weight:800}
 .primary:hover{background:#e4f1b7}
 .secondary{background:#232a20;border:1px solid #3b4634;color:#e1e9d5;border-radius:10px;padding:10px 13px;font-weight:650}
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
 .stat{background:linear-gradient(145deg,#1c231a,#171c15);border:1px solid var(--line);border-radius:15px;padding:17px;position:relative;overflow:hidden}
-.stat:after{content:"";position:absolute;width:80px;height:80px;border-radius:50%;right:-25px;top:-32px;background:var(--glow,#a8b96a);opacity:.09;filter:blur(2px)}
 .stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
-.stat-icon{width:31px;height:31px;display:grid;place-items:center;background:#293122;border-radius:9px;color:var(--accent,var(--olive2));font-size:16px}
-.stat strong{display:block;font-size:29px;letter-spacing:-.04em;margin:13px 0 2px}
+.stat-icon{width:31px;height:31px;display:grid;place-items:center;background:#293122;border-radius:9px;color:var(--olive2)}
+.stat strong{display:block;font-size:29px;margin:13px 0 2px}
 .stat small{color:var(--muted);font-size:11px}
 .layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.8fr);gap:16px}
 .panel{background:linear-gradient(145deg,#1a2018,#161b14);border:1px solid var(--line);border-radius:16px;min-width:0}
@@ -74,7 +74,7 @@ p.sub{margin:0;color:var(--muted)}
 .activity-item time{font-size:10px;color:#788372}
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
 .quick{padding:13px;border:1px solid var(--line);border-radius:12px;background:#20271d;text-align:left;color:var(--text)}
-.quick:hover{border-color:#65784b;background:#252e20}
+.quick:hover{border-color:#65784b}
 .quick span{font-size:19px}
 .quick strong{display:block;font-size:12px;margin-top:9px}
 .quick small{color:var(--muted);font-size:10px}
@@ -84,19 +84,19 @@ p.sub{margin:0;color:var(--muted)}
 .filters input,.filters select,.field input,.field select,.field textarea{background:#11160f;border:1px solid #343e2f;color:var(--text);padding:10px 11px;border-radius:9px;outline:none;min-width:0}
 .filters input{flex:1;min-width:180px}
 .filters select{min-width:140px}
-.filters input:focus,.filters select:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:#82985a;box-shadow:0 0 0 3px #a8b96a18}
+.filters input:focus,.filters select:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:#82985a}
 .table-wrap{overflow:auto}
 table{width:100%;border-collapse:collapse;min-width:760px}
-th{text-align:left;padding:12px 17px;color:#87917f;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;background:#171c14}
+th{text-align:left;padding:12px 17px;color:#87917f;font-size:10px;text-transform:uppercase;letter-spacing:.12em;background:#171c14}
 td{padding:14px 17px;border-top:1px solid #2b3327;color:#dfe5d8;font-size:12px}
 tbody tr:hover{background:#20271c}
 .person{display:flex;align-items:center;gap:10px}
-.person-avatar{width:35px;height:35px;border-radius:11px;background:linear-gradient(145deg,#46573b,#283421);display:grid;place-items:center;color:#e2edc2;font-weight:850}
+.person-avatar{width:35px;height:35px;border-radius:11px;background:linear-gradient(145deg,#46573b,#283421);display:grid;place-items:center;color:#e2edc2;font-weight:850;flex:none}
 .person strong{display:block}
 .person small{color:var(--muted);font-size:10px}
 .tags{display:flex;gap:5px;flex-wrap:wrap}
 .tag{font-size:10px;padding:4px 7px;border-radius:6px;background:#283024;color:#cbd7bd;border:1px solid #394532}
-.row-actions{border:1px solid #3a4532;background:#242d20;color:#dce6cf;border-radius:7px;padding:6px 9px}
+.row-actions{border:1px solid #3a4532;background:#242d20;color:#dce6cf;border-radius:7px;padding:6px 9px;margin:2px}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 .module-placeholder{padding:40px 22px;text-align:center}
 .module-placeholder .big-icon{font-size:34px}
@@ -150,10 +150,10 @@ tbody tr:hover{background:#20271c}
   <section class="page active" id="page-dashboard">
     <div class="hero-row"><div><div class="eyebrow">Centre de commandement</div><h1>Tableau de bord</h1><p class="sub">Vue d'ensemble des effectifs et des opérations du comté.</p></div><button class="primary" onclick="openModal()">＋ Ajouter un agent</button></div>
     <div class="stats">
-      <div class="stat" style="--accent:#d4e49a;--glow:#d4e49a"><div class="stat-top">Effectif total <span class="stat-icon">♙</span></div><strong id="stat-total">10</strong><small>Agents enregistrés dans la démo</small></div>
-      <div class="stat" style="--accent:#5cc69a;--glow:#5cc69a"><div class="stat-top">Agents actifs <span class="stat-icon">✓</span></div><strong id="stat-active">8</strong><small>Disponibles actuellement</small></div>
-      <div class="stat" style="--accent:#eab36e;--glow:#eab36e"><div class="stat-top">En absence <span class="stat-icon">◷</span></div><strong id="stat-absence">2</strong><small>Absences déclarées</small></div>
-      <div class="stat" style="--accent:#7cb7ef;--glow:#7cb7ef"><div class="stat-top">Brigades <span class="stat-icon">⬡</span></div><strong>02</strong><small>DOA · SWAT</small></div>
+      <div class="stat"><div class="stat-top">Effectif total <span class="stat-icon">♙</span></div><strong id="stat-total">10</strong><small>Agents enregistrés dans la démo</small></div>
+      <div class="stat"><div class="stat-top">Agents actifs <span class="stat-icon">✓</span></div><strong id="stat-active">8</strong><small>Disponibles actuellement</small></div>
+      <div class="stat"><div class="stat-top">En absence <span class="stat-icon">◷</span></div><strong id="stat-absence">2</strong><small>Absences déclarées</small></div>
+      <div class="stat"><div class="stat-top">Brigades <span class="stat-icon">⬡</span></div><strong>02</strong><small>DOA · SWAT</small></div>
     </div>
     <div class="layout">
       <div class="panel"><div class="panel-head"><div><h2>Effectifs récents</h2><p>Annuaire trié par ordre hiérarchique</p></div><button class="secondary" onclick="showPage('personnel')">Voir l'annuaire ↗</button></div><div class="table-wrap"><table><thead><tr><th>Agent</th><th>Grade</th><th>Brigade</th><th>Statut</th></tr></thead><tbody id="dashboard-people"></tbody></table></div></div>
@@ -171,10 +171,10 @@ tbody tr:hover{background:#20271c}
   <section class="page" id="page-personnel">
     <div class="hero-row"><div><div class="eyebrow">Gestion des effectifs</div><h1>Personnel</h1><p class="sub">Annuaire, grades, formations et affectations.</p></div><button class="primary" onclick="openModal()">＋ Ajouter un agent</button></div>
     <div class="panel"><div class="panel-head"><div><h2>Annuaire des agents</h2><p id="directory-count">10 agents · tri hiérarchique automatique</p></div><span class="pill division-doa">DOA / SWAT</span></div>
-      <div class="filters"><input id="search" placeholder="⌕ Rechercher un nom ou matricule…" oninput="renderPeople()"><select id="grade-filter" onchange="renderPeople()"><option value="">Tous les grades</option></select><select id="division-filter" onchange="renderPeople()"><option value="">Toutes les brigades</option><option>DOA</option><option>SWAT</option></select><select id="status-filter" onchange="renderPeople()"><option value="">Tous les statuts</option><option>Actif</option><option>Absence</option></select></div>
-      <div class="table-wrap"><table><thead><tr><th>Matricule / Agent</th><th>Grade</th><th>Brigade</th><th>Spécialisations</th><th>Formations</th><th>Statut</th><th></th></tr></thead><tbody id="people-table"></tbody></table></div>
+      <div class="filters"><input id="search" placeholder="⌕ Rechercher un nom ou matricule…" oninput="renderPeople()"><select id="grade-filter" onchange="renderPeople()"><option value="">Tous les grades</option></select><select id="division-filter" onchange="renderPeople()"><option value="">Toutes les brigades</option><option value="__none">Sans brigade (—)</option><option>DOA</option><option>SWAT</option></select><select id="status-filter" onchange="renderPeople()"><option value="">Tous les statuts</option><option>Actif</option><option>Absence</option></select></div>
+      <div class="table-wrap"><table><thead><tr><th>Matricule / Agent</th><th>Grade</th><th>Brigade</th><th>Spécialisations</th><th>Formations</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="people-table"></tbody></table></div>
     </div>
-    <div class="notice">ⓘ Données fictives de démonstration. Les ajouts sont conservés uniquement dans cette page ouverte ; la base Supabase sera raccordée séparément.</div>
+    <div class="notice">ⓘ Données fictives de démonstration. Les modifications sont conservées uniquement dans la mémoire de la page ouverte ; elles seront perdues après actualisation.</div>
   </section>
   <section class="page" id="page-vehicles">
     <div class="hero-row"><div><div class="eyebrow">Logistique</div><h1>Parc véhicules</h1><p class="sub">Vue de démonstration des véhicules et affectations.</p></div><button class="primary" onclick="toast('Le formulaire véhicules sera ajouté dans une prochaine étape.')">＋ Ajouter un véhicule</button></div>
@@ -191,7 +191,7 @@ tbody tr:hover{background:#20271c}
   </section>
   <section class="page" id="page-documents">
     <div class="hero-row"><div><div class="eyebrow">Administration</div><h1>Documents & sanctions</h1><p class="sub">Espace prévu pour les documents internes et le suivi administratif.</p></div></div>
-    <div class="panel module-placeholder"><div class="big-icon">▣</div><h2>Un espace prêt à construire</h2><p>Le style général et la navigation sont en place. Les documents, sanctions, archivage et règles de visibilité seront raccordés aux permissions validées.</p><button class="secondary" onclick="toast('Module planifié — pas encore connecté à une base de données.')">Module en préparation</button></div>
+    <div class="panel module-placeholder"><div class="big-icon">▣</div><h2>Un espace prêt à construire</h2><p>Les documents, sanctions, archivage et règles de visibilité seront raccordés aux permissions validées.</p><button class="secondary" onclick="toast('Module planifié — pas encore connecté à une base de données.')">Module en préparation</button></div>
   </section>
   <section class="page" id="page-access">
     <div class="hero-row"><div><div class="eyebrow">Contrôle des accès</div><h1>Rôles & permissions</h1><p class="sub">Aperçu des profils d'accès prévus pour la version connectée.</p></div></div>
@@ -200,32 +200,52 @@ tbody tr:hover{background:#20271c}
       <div class="role-card"><span class="pill role-rh">RESSOURCES HUMAINES</span><div class="role-icon">👥</div><h3>RH</h3><p>Fiches employés, grades, formations, absences et création de comptes.</p></div>
       <div class="role-card"><span class="pill role-lead">RESPONSABLE</span><div class="role-icon">🎯</div><h3>Responsable de brigade</h3><p>Personnel, véhicules et rapports limités à sa brigade.</p></div>
       <div class="role-card"><span class="pill role-agent">AGENT</span><div class="role-icon">♙</div><h3>Agent</h3><p>Annuaire complet en lecture seule, sans notes internes ni données sensibles.</p></div>
-    </div><div class="notice">Les rôles sont présentés ici à titre visuel. Les vrais contrôles d'accès ne seront actifs qu'après la configuration sécurisée de Supabase.</div>
+    </div><div class="notice">Les vrais contrôles d'accès nécessiteront une configuration sécurisée de Supabase.</div>
   </section>
 </main>
 </div>
-<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h2>Nouvelle fiche employé</h2><button class="icon-btn" onclick="closeModal()">✕</button></div><form id="employee-form"><div class="modal-body"><div class="form-grid">
-  <div class="field"><label>Nom et prénom *</label><input name="name" required placeholder="Ex. Alex Martin"></div>
-  <div class="field"><label>Matricule manuel unique *</label><input name="badge" required placeholder="Ex. BCSO-014"></div>
-  <div class="field"><label>Grade *</label><select name="grade" id="new-grade" required></select></div>
-  <div class="field"><label>Brigade *</label><select name="division" required><option>DOA</option><option>SWAT</option></select></div>
-  <div class="field"><label>Date de naissance</label><input name="birth" type="date"></div>
-  <div class="field"><label>Date d'embauche</label><input name="hire" type="date"></div>
-  <div class="field"><label>ID en jeu</label><input name="gameid" placeholder="ID joueur"></div>
-  <div class="field"><label>ID Discord</label><input name="discord" placeholder="ID Discord"></div>
-  <div class="field"><label>Statut</label><select name="status" id="new-status" onchange="toggleAbsence()"><option>Actif</option><option>Absence</option></select></div>
-  <div class="field"><label>Photo — URL</label><input name="photo" placeholder="https://…"></div>
-  <div class="field" id="absence-start" style="display:none"><label>Début d'absence</label><input name="absenceStart" type="date"></div>
-  <div class="field" id="absence-end" style="display:none"><label>Fin d'absence</label><input name="absenceEnd" type="date"></div>
-  <div class="field full"><label>Formations</label><div class="checks" id="formation-checks"></div></div>
-  <div class="field full"><label>Spécialisations</label><div class="checks" id="specialty-checks"></div></div>
-  <div class="field full"><label>Notes internes (démo uniquement)</label><textarea name="notes" rows="2" style="background:#11160f;border:1px solid #343e2f;color:#f0f2e9;border-radius:9px;padding:10px" placeholder="Notes réservées aux rôles autorisés"></textarea></div>
-  </div></div><div class="modal-foot"><button type="button" class="secondary" onclick="closeModal()">Annuler</button><button type="submit" class="primary">Créer la fiche</button></div></form></div></div>
+
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head"><h2 id="employee-modal-title">Nouvelle fiche employé</h2><button class="icon-btn" onclick="closeModal()">✕</button></div>
+    <form id="employee-form">
+      <div class="modal-body"><div class="form-grid">
+        <div class="field"><label>Nom et prénom *</label><input name="name" required placeholder="Ex. Alex Martin"></div>
+        <div class="field"><label>Matricule manuel unique *</label><input name="badge" required placeholder="Ex. BCSO-014"></div>
+        <div class="field"><label>Grade *</label><select name="grade" id="new-grade" required></select></div>
+        <div class="field"><label>Brigade</label><select name="division"><option value="">— Aucune brigade —</option><option value="DOA">DOA</option><option value="SWAT">SWAT</option></select></div>
+        <div class="field"><label>Date de naissance</label><input name="birth" type="date"></div>
+        <div class="field"><label>Date d'embauche</label><input name="hire" type="date"></div>
+        <div class="field"><label>ID en jeu</label><input name="gameid" placeholder="ID joueur"></div>
+        <div class="field"><label>ID Discord</label><input name="discord" placeholder="ID Discord"></div>
+        <div class="field"><label>Statut</label><select name="status" id="new-status" onchange="toggleAbsence()"><option>Actif</option><option>Absence</option></select></div>
+        <div class="field"><label>Photo — URL</label><input name="photo" placeholder="https://…"></div>
+        <div class="field" id="absence-start" style="display:none"><label>Début d'absence</label><input name="absenceStart" type="date"></div>
+        <div class="field" id="absence-end" style="display:none"><label>Fin d'absence</label><input name="absenceEnd" type="date"></div>
+        <div class="field full"><label>Formations</label><div class="checks" id="formation-checks"></div></div>
+        <div class="field full"><label>Spécialisations</label><div class="checks" id="specialty-checks"></div></div>
+        <div class="field full"><label>Notes internes (démo uniquement)</label><textarea name="notes" rows="2" placeholder="Notes réservées aux rôles autorisés"></textarea></div>
+      </div></div>
+      <div class="modal-foot"><button type="button" class="secondary" onclick="closeModal()">Annuler</button><button type="submit" class="primary" id="employee-submit-label">Créer la fiche</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="detail-modal" onclick="if(event.target===this)closeDetailModal()">
+  <div class="modal">
+    <div class="modal-head"><h2>Fiche employé</h2><button class="icon-btn" onclick="closeDetailModal()">✕</button></div>
+    <div class="modal-body" id="employee-detail-content"></div>
+    <div class="modal-foot"><button class="secondary" onclick="closeDetailModal()">Fermer</button><button class="primary" id="detail-edit-button">✎ Modifier</button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
+
 <script>
 const grades=["Sheriff","Undersheriff","Lieutenant","Sergeant II","Sergeant I","Senior Deputy","Deputy III","Deputy II","Deputy I","Deputy Trainee"];
 const formations=["Procédure","Radio","MDT","Négociateur","Lead Terrain","Lead OP","First Lincoln","Conduite","Dispatcher","PPA I","PPA II","PPA III","PPA IV","PPA V"];
 const specialties=["Air Support Unit","K-9 Unit","Trafic Division","Marine Unit","Media Relation Division","Recruteur Formateur"];
+let editingBadge=null;
+
 let people=[
 {name:"Morgan Hale",badge:"BCSO-001",grade:"Sheriff",division:"DOA",status:"Actif",specialties:["Recruteur Formateur"],formations:["Procédure","Radio","MDT"]},
 {name:"Jordan Blake",badge:"BCSO-002",grade:"Undersheriff",division:"SWAT",status:"Actif",specialties:["Air Support Unit"],formations:["Radio","Lead Terrain"]},
@@ -233,38 +253,261 @@ let people=[
 {name:"Riley Carter",badge:"BCSO-007",grade:"Sergeant II",division:"SWAT",status:"Actif",specialties:["K-9 Unit"],formations:["Conduite","Lead OP"]},
 {name:"Casey Reed",badge:"BCSO-009",grade:"Sergeant I",division:"DOA",status:"Absence",specialties:["Marine Unit"],formations:["Radio","Dispatcher"]},
 {name:"Avery Stone",badge:"BCSO-012",grade:"Senior Deputy",division:"DOA",status:"Actif",specialties:["Media Relation Division"],formations:["MDT","PPA III"]},
-{name:"Cameron Wells",badge:"BCSO-014",grade:"Deputy III",division:"SWAT",status:"Actif",specialties:[],formations:["Procédure","Conduite"]},
+{name:"Cameron Wells",badge:"BCSO-014",grade:"Deputy III",division:"",status:"Actif",specialties:[],formations:["Procédure","Conduite"]},
 {name:"Quinn Parker",badge:"BCSO-018",grade:"Deputy II",division:"DOA",status:"Actif",specialties:["K-9 Unit"],formations:["Radio","PPA II"]},
 {name:"Drew Foster",badge:"BCSO-021",grade:"Deputy I",division:"SWAT",status:"Absence",specialties:[],formations:["Procédure"]},
 {name:"Skyler Hayes",badge:"BCSO-027",grade:"Deputy Trainee",division:"DOA",status:"Actif",specialties:[],formations:[]}
 ];
+
 const rank=g=>grades.indexOf(g);
-const rolePill=(g)=>`<span class="pill ${g==="DOA"?"division-doa":"division-swat"}">${g}</span>`;
-function initials(n){return n.split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase()}
-function personRow(p){return `<tr><td><div class="person"><div class="person-avatar">${initials(p.name)}</div><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.badge)}</small></div></div></td><td><span class="pill role-agent">${escapeHtml(p.grade)}</span></td><td>${rolePill(p.division)}</td><td><div class="tags">${(p.specialties||[]).slice(0,2).map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join("")||'<span style="color:#7e8976">—</span>'}</div></td><td><div class="tags">${(p.formations||[]).slice(0,2).map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join("")||'<span style="color:#7e8976">—</span>'}</div></td><td><span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${p.status}</span></td><td><button class="row-actions" onclick="viewPerson('${p.badge}')">Voir</button></td></tr>`}
-function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function sortedPeople(arr){return [...arr].sort((a,b)=>rank(a.grade)-rank(b.grade)||a.name.localeCompare(b.name,"fr"))}
-function renderPeople(){
- const q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("grade-filter")?.value||"",d=document.getElementById("division-filter")?.value||"",s=document.getElementById("status-filter")?.value||"";
- const arr=sortedPeople(people).filter(p=>(p.name+" "+p.badge).toLowerCase().includes(q)&&(!g||p.grade===g)&&(!d||p.division===d)&&(!s||p.status===s));
- document.getElementById("people-table").innerHTML=arr.map(personRow).join("")||'<tr><td colspan="7" class="empty">Aucun agent ne correspond à la recherche.</td></tr>';
- document.getElementById("directory-count").textContent=`${arr.length} agent${arr.length>1?"s":""} affiché${arr.length>1?"s":""} · tri hiérarchique automatique`;
- document.getElementById("dashboard-people").innerHTML=sortedPeople(people).slice(0,5).map(p=>`<tr><td><div class="person"><div class="person-avatar">${initials(p.name)}</div><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.badge)}</small></div></div></td><td><span class="pill role-agent">${escapeHtml(p.grade)}</span></td><td>${rolePill(p.division)}</td><td><span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${p.status}</span></td></tr>`).join("");
- document.getElementById("stat-total").textContent=people.length;document.getElementById("stat-active").textContent=people.filter(p=>p.status==="Actif").length;document.getElementById("stat-absence").textContent=people.filter(p=>p.status==="Absence").length;
+
+function rolePill(g){
+  if(!g)return '<span class="pill">— Sans brigade</span>';
+  const cls=g==="DOA"?"division-doa":g==="SWAT"?"division-swat":"role-agent";
+  return `<span class="pill ${cls}">${escapeHtml(g)}</span>`;
 }
-function showPage(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("page-"+name)?.classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));const labels={dashboard:"Tableau de bord",personnel:"Personnel",vehicles:"Véhicules",reports:"Rapports",hierarchy:"Hiérarchie",documents:"Documents & sanctions",access:"Rôles & permissions"};document.getElementById("crumb").textContent=labels[name]||name;window.scrollTo({top:0,behavior:"smooth"})}
+
+function initials(n){
+  return String(n||"?").split(/\s+/).map(x=>x[0]||"").slice(0,2).join("").toUpperCase();
+}
+
+function escapeHtml(s){
+  return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function sortedPeople(arr){
+  return [...arr].sort((a,b)=>rank(a.grade)-rank(b.grade)||a.name.localeCompare(b.name,"fr"));
+}
+
+function personRow(p){
+  return `<tr>
+    <td><div class="person"><div class="person-avatar">${initials(p.name)}</div><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.badge)}</small></div></div></td>
+    <td><span class="pill role-agent">${escapeHtml(p.grade)}</span></td>
+    <td>${rolePill(p.division)}</td>
+    <td><div class="tags">${(p.specialties||[]).slice(0,2).map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join("")||'<span style="color:#7e8976">—</span>'}</div></td>
+    <td><div class="tags">${(p.formations||[]).slice(0,2).map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join("")||'<span style="color:#7e8976">—</span>'}</div></td>
+    <td><span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${escapeHtml(p.status)}</span></td>
+    <td><button class="row-actions" onclick="viewPerson('${escapeHtml(p.badge)}')">Voir</button><button class="row-actions" onclick="openModal('${escapeHtml(p.badge)}')">✎ Modifier</button></td>
+  </tr>`;
+}
+
+function renderPeople(){
+  const q=(document.getElementById("search")?.value||"").toLowerCase();
+  const g=document.getElementById("grade-filter")?.value||"";
+  const d=document.getElementById("division-filter")?.value||"";
+  const s=document.getElementById("status-filter")?.value||"";
+
+  const arr=sortedPeople(people).filter(p=>
+    (p.name+" "+p.badge).toLowerCase().includes(q)&&
+    (!g||p.grade===g)&&
+    (!d||(d==="__none"?!p.division:p.division===d))&&
+    (!s||p.status===s)
+  );
+
+  document.getElementById("people-table").innerHTML=arr.map(personRow).join("")||
+    '<tr><td colspan="7" class="empty">Aucun agent ne correspond à la recherche.</td></tr>';
+
+  document.getElementById("directory-count").textContent=
+    `${arr.length} agent${arr.length>1?"s":""} affiché${arr.length>1?"s":""} · tri hiérarchique automatique`;
+
+  document.getElementById("dashboard-people").innerHTML=sortedPeople(people).slice(0,5).map(p=>
+    `<tr>
+      <td><div class="person"><div class="person-avatar">${initials(p.name)}</div><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.badge)}</small></div></div></td>
+      <td><span class="pill role-agent">${escapeHtml(p.grade)}</span></td>
+      <td>${rolePill(p.division)}</td>
+      <td><span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${escapeHtml(p.status)}</span></td>
+    </tr>`
+  ).join("");
+
+  document.getElementById("stat-total").textContent=people.length;
+  document.getElementById("stat-active").textContent=people.filter(p=>p.status==="Actif").length;
+  document.getElementById("stat-absence").textContent=people.filter(p=>p.status==="Absence").length;
+}
+
+function showPage(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+name)?.classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+  const labels={dashboard:"Tableau de bord",personnel:"Personnel",vehicles:"Véhicules",reports:"Rapports",hierarchy:"Hiérarchie",documents:"Documents & sanctions",access:"Rôles & permissions"};
+  document.getElementById("crumb").textContent=labels[name]||name;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
 document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-function openModal(){document.getElementById("modal").classList.add("show")}
-function closeModal(){document.getElementById("modal").classList.remove("show")}
-function toggleAbsence(){const on=document.getElementById("new-status").value==="Absence";document.getElementById("absence-start").style.display=on?"grid":"none";document.getElementById("absence-end").style.display=on?"grid":"none";document.querySelector('[name="absenceStart"]').required=on;document.querySelector('[name="absenceEnd"]').required=on}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
-function viewPerson(badge){const p=people.find(x=>x.badge===badge);if(p)toast(`${p.name} · ${p.grade} · ${p.division} — mode démo`)}
-document.getElementById("employee-form").addEventListener("submit",e=>{e.preventDefault();const f=new FormData(e.target),name=String(f.get("name")).trim(),badge=String(f.get("badge")).trim();if(people.some(p=>p.badge.toLowerCase()===badge.toLowerCase())){toast("Ce matricule existe déjà.");return}if(f.get("status")==="Absence"&&(!f.get("absenceStart")||!f.get("absenceEnd"))){toast("Indique les dates de début et de fin d'absence.");return}
-const picked=id=>[...document.querySelectorAll(`#${id} input:checked`)].map(x=>x.value);
-people.push({name,badge,grade:f.get("grade"),division:f.get("division"),status:f.get("status"),specialties:picked("specialty-checks"),formations:picked("formation-checks"),birth:f.get("birth"),hire:f.get("hire"),gameid:f.get("gameid"),discord:f.get("discord"),photo:f.get("photo"),notes:f.get("notes"),absenceStart:f.get("absenceStart"),absenceEnd:f.get("absenceEnd")});
-e.target.reset();toggleAbsence();closeModal();renderPeople();toast("Fiche ajoutée en mémoire locale (démo).")});
-function makeOptions(){const gf=document.getElementById("grade-filter"),ng=document.getElementById("new-grade");grades.forEach(g=>{gf.add(new Option(g,g));ng.add(new Option(g,g))});const build=(id,items)=>document.getElementById(id).innerHTML=items.map(x=>`<label><input type="checkbox" value="${escapeHtml(x)}"> ${escapeHtml(x)}</label>`).join("");build("formation-checks",formations);build("specialty-checks",specialties);document.getElementById("rank-list").innerHTML=grades.map((g,i)=>`<div class="activity-item"><div class="activity-icon">${String(i+1).padStart(2,"0")}</div><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex:1"><strong>${g}</strong><span class="pill role-agent">${i===0?"Commandement":i<3?"Officiers":i<5?"Sous-officiers":"Effectifs"}</span></div></div>`).join("")}
-makeOptions();renderPeople();
+
+function openModal(badge=null){
+  const form=document.getElementById("employee-form");
+  editingBadge=badge;
+  form.reset();
+  document.querySelectorAll("#formation-checks input,#specialty-checks input").forEach(x=>x.checked=false);
+
+  const p=badge?people.find(x=>x.badge===badge):null;
+  document.getElementById("employee-modal-title").textContent=p?"Modifier la fiche employé":"Nouvelle fiche employé";
+  document.getElementById("employee-submit-label").textContent=p?"Enregistrer les modifications":"Créer la fiche";
+
+  if(p){
+    for(const key of ["name","badge","grade","division","birth","hire","gameid","discord","status","photo","absenceStart","absenceEnd","notes"]){
+      const input=form.elements.namedItem(key);
+      if(input)input.value=p[key]??"";
+    }
+    document.querySelectorAll("#formation-checks input").forEach(x=>x.checked=(p.formations||[]).includes(x.value));
+    document.querySelectorAll("#specialty-checks input").forEach(x=>x.checked=(p.specialties||[]).includes(x.value));
+  }
+
+  toggleAbsence();
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeModal(){
+  document.getElementById("modal").classList.remove("show");
+  editingBadge=null;
+}
+
+function toggleAbsence(){
+  const on=document.getElementById("new-status").value==="Absence";
+  document.getElementById("absence-start").style.display=on?"grid":"none";
+  document.getElementById("absence-end").style.display=on?"grid":"none";
+  document.querySelector('[name="absenceStart"]').required=on;
+  document.querySelector('[name="absenceEnd"]').required=on;
+}
+
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+function viewPerson(badge){
+  const p=people.find(x=>x.badge===badge);
+  if(!p)return;
+
+  const item=(label,value)=>
+    `<div style="padding:11px 12px;background:#20271d;border:1px solid #30392c;border-radius:10px">
+      <small style="display:block;color:#9aa394;margin-bottom:4px">${label}</small>
+      <strong>${value||"—"}</strong>
+    </div>`;
+
+  document.getElementById("employee-detail-content").innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div class="person-avatar" style="width:58px;height:58px;font-size:18px">${initials(p.name)}</div>
+      <div>
+        <h2 style="margin:0 0 6px">${escapeHtml(p.name)}</h2>
+        <div class="tags">
+          <span class="pill role-agent">${escapeHtml(p.grade)}</span>
+          ${rolePill(p.division)}
+          <span class="pill ${p.status==="Actif"?"status-active":"status-absence"}">${escapeHtml(p.status)}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-grid">
+      ${item("Matricule",escapeHtml(p.badge))}
+      ${item("Grade",escapeHtml(p.grade))}
+      ${item("Brigade",p.division?rolePill(p.division):"— Sans brigade")}
+      ${item("Date de naissance",escapeHtml(p.birth||"—"))}
+      ${item("Date d'embauche",escapeHtml(p.hire||"—"))}
+      ${item("ID en jeu",escapeHtml(p.gameid||"—"))}
+      ${item("ID Discord",escapeHtml(p.discord||"—"))}
+      ${item("Début d'absence",escapeHtml(p.absenceStart||"—"))}
+      ${item("Fin d'absence",escapeHtml(p.absenceEnd||"—"))}
+      <div style="grid-column:1/-1">${item("Formations",(p.formations||[]).map(escapeHtml).join(" · ")||"—")}</div>
+      <div style="grid-column:1/-1">${item("Spécialisations",(p.specialties||[]).map(escapeHtml).join(" · ")||"—")}</div>
+      <div style="grid-column:1/-1">${item("Notes internes",escapeHtml(p.notes||"—"))}</div>
+      ${p.photo?`<div style="grid-column:1/-1">${item("Photo",`<a href="${escapeHtml(p.photo)}" target="_blank" rel="noopener" style="color:#d4e49a">Ouvrir la photo</a>`)}</div>`:""}
+    </div>`;
+
+  document.getElementById("detail-edit-button").onclick=()=>{
+    closeDetailModal();
+    openModal(badge);
+  };
+  document.getElementById("detail-modal").classList.add("show");
+}
+
+function closeDetailModal(){
+  document.getElementById("detail-modal").classList.remove("show");
+}
+
+document.getElementById("employee-form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const name=String(f.get("name")).trim();
+  const badge=String(f.get("badge")).trim();
+
+  if(people.some(p=>p.badge.toLowerCase()===badge.toLowerCase()&&p.badge!==editingBadge)){
+    toast("Ce matricule existe déjà.");
+    return;
+  }
+
+  if(f.get("status")==="Absence"&&(!f.get("absenceStart")||!f.get("absenceEnd"))){
+    toast("Indique les dates de début et de fin d'absence.");
+    return;
+  }
+
+  const picked=id=>[...document.querySelectorAll(`#${id} input:checked`)].map(x=>x.value);
+
+  const data={
+    name,
+    badge,
+    grade:f.get("grade"),
+    division:f.get("division")||"",
+    status:f.get("status"),
+    specialties:picked("specialty-checks"),
+    formations:picked("formation-checks"),
+    birth:f.get("birth"),
+    hire:f.get("hire"),
+    gameid:f.get("gameid"),
+    discord:f.get("discord"),
+    photo:f.get("photo"),
+    notes:f.get("notes"),
+    absenceStart:f.get("absenceStart"),
+    absenceEnd:f.get("absenceEnd")
+  };
+
+  if(editingBadge){
+    const index=people.findIndex(p=>p.badge===editingBadge);
+    if(index>=0)people[index]={...people[index],...data};
+    closeModal();
+    renderPeople();
+    toast("Fiche employé modifiée (démo).");
+  }else{
+    people.push(data);
+    closeModal();
+    renderPeople();
+    toast("Fiche ajoutée en mémoire locale (démo).");
+  }
+});
+
+function makeOptions(){
+  const gf=document.getElementById("grade-filter");
+  const ng=document.getElementById("new-grade");
+
+  grades.forEach(g=>{
+    gf.add(new Option(g,g));
+    ng.add(new Option(g,g));
+  });
+
+  const build=(id,items)=>{
+    document.getElementById(id).innerHTML=items.map(x=>
+      `<label><input type="checkbox" value="${escapeHtml(x)}"> ${escapeHtml(x)}</label>`
+    ).join("");
+  };
+
+  build("formation-checks",formations);
+  build("specialty-checks",specialties);
+
+  document.getElementById("rank-list").innerHTML=grades.map((g,i)=>
+    `<div class="activity-item">
+      <div class="activity-icon">${String(i+1).padStart(2,"0")}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex:1">
+        <strong>${escapeHtml(g)}</strong>
+        <span class="pill role-agent">${i===0?"Commandement":i<3?"Officiers":i<5?"Sous-officiers":"Effectifs"}</span>
+      </div>
+    </div>`
+  ).join("");
+}
+
+makeOptions();
+renderPeople();
 </script>
 </body>
 </html>
