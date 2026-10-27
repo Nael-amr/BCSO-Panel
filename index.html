@@ -1,1 +1,259 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171a16">
+<title>BCSO | Tactical Command</title>
+<style>
+:root {
+  --bg: #11130f;
+  --panel: #1b1e18;
+  --panel2: #22261e;
+  --olive: #626b43;
+  --khaki: #c5bd98;
+  --text: #ecece3;
+  --muted: #969b8d;
+  --border: #34382d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 245px;
+  padding: 28px 17px;
+  background: #171a15;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.brand {
+  padding: 0 10px 26px;
+  border-bottom: 1px solid var(--border);
+}
+.brand-mark {
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  background: var(--olive);
+  color: white; font-size: 22px;
+  font-weight: 900; border-radius: 8px;
+  margin-bottom: 14px;
+}
+.brand h1 { font-size: 19px; letter-spacing: 2px; margin: 0; }
+.brand p { color: var(--khaki); font-size: 10px; letter-spacing: 2px; }
+.nav-label {
+  margin: 27px 10px 10px;
+  font-size: 10px; letter-spacing: 2px; color: var(--muted);
+}
+.nav button {
+  display: block; width: 100%;
+  text-align: left; border: 0;
+  background: transparent; color: #bfc2b6;
+  padding: 13px 12px; margin: 3px 0;
+  border-radius: 5px; cursor: pointer; font-size: 13px;
+}
+.nav button:hover, .nav button.active {
+  background: #303628; color: #fff;
+  border-left: 3px solid var(--khaki);
+}
+.sidebar-bottom {
+  margin: 35px 10px 0; font-size: 11px; color: var(--muted);
+}
+main { flex: 1; min-width: 0; }
+.topbar {
+  height: 72px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 0 30px; border-bottom: 1px solid var(--border);
+  background: #171a15;
+}
+.topbar small { color: var(--muted); letter-spacing: 1px; }
+.pill {
+  border: 1px solid #48513a; background: #252d20;
+  color: #c7d3b5; padding: 8px 11px;
+  border-radius: 4px; font-size: 11px;
+}
+.content { max-width: 1200px; padding: 32px; margin: auto; }
+.eyebrow { color: var(--khaki); font-size: 11px; letter-spacing: 2px; }
+h2 { font-size: clamp(25px,4vw,35px); margin: 10px 0; }
+.subtitle { color: var(--muted); font-size: 14px; line-height: 1.6; }
+.banner {
+  margin: 25px 0; padding: 22px;
+  border: 1px solid #424735;
+  background: linear-gradient(110deg,#292f22,#1b1e18);
+  border-radius: 8px; display: flex;
+  align-items: center; justify-content: space-between; gap: 18px;
+}
+.banner strong { font-size: 14px; letter-spacing: 1px; }
+.banner p { margin-bottom: 0; color: var(--muted); font-size: 12px; }
+.banner-symbol { font-size: 32px; color: var(--khaki); }
+.grid {
+  display: grid; grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 14px; margin: 20px 0 30px;
+}
+.card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 7px; padding: 19px;
+}
+.card-label { color: var(--muted); font-size: 11px; }
+.card-value { font-size: 29px; font-weight: 700; margin: 15px 0 8px; }
+.card-note { color: var(--khaki); font-size: 11px; }
+.section-title { font-size: 14px; letter-spacing: 1px; margin: 28px 0 14px; }
+.activity {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 7px; padding: 5px 20px;
+}
+.activity-row {
+  display: flex; align-items: center; gap: 13px;
+  padding: 17px 0; border-bottom: 1px solid var(--border);
+}
+.activity-row:last-child { border-bottom: 0; }
+.activity-icon {
+  width: 36px; height: 36px; display: grid;
+  place-items: center; border-radius: 5px;
+  background: #303628; color: var(--khaki);
+}
+.activity-row strong { font-size: 12px; }
+.activity-row p { color: var(--muted); font-size: 11px; margin: 5px 0 0; }
+.activity-row time { margin-left: auto; color: var(--muted); font-size: 10px; }
+.page { display: none; }
+.page.active { display: block; }
+.notice {
+  margin-top: 20px; padding: 13px;
+  border-left: 3px solid var(--olive);
+  background: #1c2119; color: var(--muted);
+  font-size: 12px; line-height: 1.6;
+}
+footer { color: var(--muted); font-size: 10px; padding: 28px 0 5px; }
+@media(max-width:900px) {
+  .sidebar { width: 205px; }
+  .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .content { padding: 22px; }
+  .topbar { padding: 0 20px; }
+}
+@media(max-width:620px) {
+  .layout { display: block; }
+  .sidebar { width: 100%; padding: 15px; border-right: 0; border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: center; gap: 12px; padding: 0 0 12px; }
+  .brand-mark { width: 40px; height: 40px; margin: 0; }
+  .brand p { margin-bottom: 0; }
+  .nav-label, .sidebar-bottom { display: none; }
+  .nav { display: flex; overflow-x: auto; gap: 5px; padding-top: 10px; }
+  .nav button { width: auto; white-space: nowrap; padding: 10px; }
+  .topbar { height: 55px; padding: 0 15px; }
+  .content { padding: 20px 15px; }
+  .grid { gap: 9px; }
+  .card { padding: 13px; }
+  .card-value { font-size: 24px; }
+  .banner { padding: 15px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">★</div>
+      <div>
+        <h1>BCSO</h1>
+        <p>TACTICAL COMMAND</p>
+      </div>
+    </div>
+    <div class="nav-label">COMMAND CENTER</div>
+    <nav class="nav">
+      <button class="active" data-page="overview">▦ &nbsp; Vue générale</button>
+      <button data-page="personnel">♙ &nbsp; Personnel</button>
+      <button data-page="vehicles">▰ &nbsp; Véhicules</button>
+      <button data-page="reports">▤ &nbsp; Rapports</button>
+      <button data-page="hierarchy">♜ &nbsp; Hiérarchie</button>
+      <button data-page="documents">▧ &nbsp; Documents & sanctions</button>
+    </nav>
+    <div class="sidebar-bottom">BLAINE COUNTY<br>SHERIFF'S OFFICE</div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <small>BCSO / INTERNAL SYSTEM</small>
+      <span class="pill">● &nbsp; INTERFACE DE DÉMONSTRATION</span>
+    </header>
+
+    <div class="content">
+      <section class="page active" id="overview">
+        <div class="eyebrow">BLAINE COUNTY · SHERIFF'S OFFICE</div>
+        <h2>Centre de commandement</h2>
+        <p class="subtitle">Bienvenue dans votre espace de gestion opérationnelle.</p>
+
+        <div class="banner">
+          <div>
+            <strong>SYSTÈME BCSO INITIALISÉ</strong>
+            <p>Interface locale prête · Données de démonstration uniquement</p>
+          </div>
+          <div class="banner-symbol">★</div>
+        </div>
+
+        <div class="grid">
+          <div class="card"><div class="card-label">EFFECTIFS</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
+          <div class="card"><div class="card-label">VÉHICULES</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
+          <div class="card"><div class="card-label">RAPPORTS</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
+          <div class="card"><div class="card-label">SANCTIONS</div><div class="card-value">—</div><div class="card-note">À configurer</div></div>
+        </div>
+
+        <h3 class="section-title">APERÇU DU SYSTÈME</h3>
+        <div class="activity">
+          <div class="activity-row"><div class="activity-icon">♙</div><div><strong>Gestion du personnel</strong><p>Profils, grades et affectations</p></div></div>
+          <div class="activity-row"><div class="activity-icon">▰</div><div><strong>Parc automobile</strong><p>Véhicules et disponibilité</p></div></div>
+          <div class="activity-row"><div class="activity-icon">▤</div><div><strong>Administration</strong><p>Rapports, documents et sanctions</p></div></div>
+        </div>
+        <div class="notice">Cette première version est une maquette d'interface. Elle ne stocke aucune donnée et ne constitue pas encore un système de connexion sécurisé.</div>
+      </section>
+
+      <section class="page" id="personnel">
+        <div class="eyebrow">RESSOURCES HUMAINES</div><h2>Gestion du personnel</h2>
+        <p class="subtitle">Profils, grades et affectations des membres du BCSO.</p>
+        <div class="notice">Le module personnel sera ajouté dans une prochaine étape.</div>
+      </section>
+
+      <section class="page" id="vehicles">
+        <div class="eyebrow">FLOTTE DU DÉPARTEMENT</div><h2>Véhicules</h2>
+        <p class="subtitle">Inventaire et suivi des véhicules de service.</p>
+        <div class="notice">Le module véhicules sera ajouté dans une prochaine étape.</div>
+      </section>
+
+      <section class="page" id="reports">
+        <div class="eyebrow">ACTIVITÉ OPÉRATIONNELLE</div><h2>Rapports</h2>
+        <p class="subtitle">Registre des interventions et comptes rendus.</p>
+        <div class="notice">Le module rapports sera ajouté dans une prochaine étape.</div>
+      </section>
+
+      <section class="page" id="hierarchy">
+        <div class="eyebrow">ORGANISATION</div><h2>Hiérarchie</h2>
+        <p class="subtitle">Grades, responsabilités et chaîne de commandement.</p>
+        <div class="notice">Le module hiérarchie sera ajouté dans une prochaine étape.</div>
+      </section>
+
+      <section class="page" id="documents">
+        <div class="eyebrow">ADMINISTRATION</div><h2>Documents & sanctions</h2>
+        <p class="subtitle">Dossiers administratifs et suivi disciplinaire.</p>
+        <div class="notice">Le module documents et sanctions sera ajouté dans une prochaine étape.</div>
+      </section>
+
+      <footer>BCSO · TACTICAL COMMAND · FICTIONAL ROLEPLAY SYSTEM</footer>
+    </div>
+  </main>
+</div>
+<script>
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll("[data-page]").forEach(item => item.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.page).classList.add("active");
+  });
+});
+</script>
+</body>
+</html>
