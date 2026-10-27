@@ -509,5 +509,44 @@ function makeOptions(){
 makeOptions();
 renderPeople();
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://nnyhchfpelmhhsjoklto.supabase.co";
+const SUPABASE_KEY = "sb_publishable_pIqMhTDyx6KRlLik-8GP4w_yIIedUr";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+  <div id="login-box">
+  <h2>BCSO — Connexion</h2>
+  <input id="login-email" type="email" placeholder="Adresse e-mail">
+  <input id="login-password" type="password" placeholder="Mot de passe">
+  <button id="login-button">Se connecter</button>
+  <p id="login-message"></p>
+</div>
+
+<script>
+document.getElementById("login-button").addEventListener("click", async () => {
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
+  const message = document.getElementById("login-message");
+
+  message.textContent = "Connexion…";
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    message.textContent = "Erreur : " + error.message;
+    return;
+  }
+
+  message.textContent = "Connecté !";
+});
+</script>
 </body>
 </html>
