@@ -5,855 +5,491 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BCSO Tactical Command</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 :root {
-  --bg:#0b0e12;
-  --p:#131922;
-  --p2:#1a222d;
-  --b:#293442;
-  --t:#e8edf3;
-  --m:#91a0b2;
-  --g:#d5ad59;
-  --green:#45c486;
-  --red:#ef6262;
+  --bg:#10120f; --surface:#191d17; --surface2:#22271f;
+  --border:#363d2d; --olive:#78865a; --olive2:#a5b582;
+  --sand:#c9b990; --text:#eeeede; --muted:#9da394;
+  --green:#83bd83; --red:#d7776c; --amber:#d6b66d;
 }
-* { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--t); font:15px Arial; }
-button,input,select { font:inherit; }
-button {
-  cursor:pointer;
-  border:1px solid var(--b);
-  border-radius:7px;
-  padding:10px 14px;
-  color:var(--t);
-  background:var(--p2);
-}
-button:disabled { opacity:.6; cursor:wait; }
-.primary {
-  background:var(--g);
-  color:#151515;
-  border-color:var(--g);
-  font-weight:bold;
-}
-.danger { background:#722d35; }
-.muted { color:var(--m); }
-header {
-  padding:18px 24px;
-  border-bottom:1px solid var(--b);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  flex-wrap:wrap;
-  background:#10151c;
-}
-.brand { display:flex; align-items:center; gap:13px; }
-.logo {
-  width:43px;
-  height:43px;
-  display:grid;
-  place-items:center;
-  background:var(--g);
-  color:#171717;
-  font-size:22px;
-  font-weight:bold;
-  border-radius:8px;
-}
-h1 { margin:0; font-size:19px; letter-spacing:1px; }
-.subtitle { margin-top:5px; color:var(--m); font-size:12px; }
-main { max-width:1200px; margin:auto; padding:24px; }
-.stats {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:14px;
-  margin-bottom:22px;
-}
-.stat,.panel,.login-card,.modal-card {
-  background:var(--p);
-  border:1px solid var(--b);
-  border-radius:10px;
-}
-.stat { padding:18px; }
-.stat-label { color:var(--m); font-size:12px; text-transform:uppercase; }
-.stat-number { font-size:30px; font-weight:bold; margin-top:10px; }
-.toolbar {
-  display:flex;
-  gap:10px;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-}
-input,select {
-  background:#0d1218;
-  border:1px solid var(--b);
-  color:var(--t);
-  border-radius:7px;
-  padding:11px;
-  width:100%;
-  min-width:0;
-}
-.toolbar input { flex:1; min-width:180px; }
-.toolbar select { width:auto; min-width:150px; }
-.panel { overflow:hidden; margin-bottom:20px; }
-.panel-heading {
-  padding:16px 18px;
-  border-bottom:1px solid var(--b);
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-.panel-heading h2 { margin:0; font-size:15px; }
-table { width:100%; border-collapse:collapse; }
-th,td {
-  padding:13px 15px;
-  border-bottom:1px solid var(--b);
-  text-align:left;
-  font-size:13px;
-}
-th {
-  color:var(--m);
-  font-size:11px;
-  text-transform:uppercase;
-  background:#10161e;
-}
-tbody tr:hover { background:#19212b; }
-.badge {
-  display:inline-block;
-  padding:5px 8px;
-  border-radius:5px;
-  font-size:11px;
-  background:#273343;
-}
-.status-active { color:var(--green); }
-.status-absent { color:#f0bd61; }
-.status-inactive { color:var(--red); }
-.actions { display:flex; gap:6px; }
-.actions button { padding:7px 9px; font-size:12px; }
-.empty { padding:35px; text-align:center; color:var(--m); }
-#loginScreen {
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  padding:20px;
-}
-.login-card { width:100%; max-width:400px; padding:28px; }
-.field { margin:15px 0; }
-.field label {
-  display:block;
-  margin-bottom:7px;
-  font-size:12px;
-  color:var(--m);
-}
-.login-card button { width:100%; }
-#app { display:none; }
-#modal {
-  position:fixed;
-  inset:0;
-  background:#000b;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  overflow:auto;
-  z-index:10;
-}
-.modal-card {
-  width:100%;
-  max-width:520px;
-  padding:22px;
-  margin:auto;
-}
-.form-grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:13px;
-}
-.form-grid .field { margin:0; }
-.full { grid-column:1/-1; }
-.modal-actions {
-  display:flex;
-  justify-content:flex-end;
-  gap:9px;
-  margin-top:20px;
-}
-#notice {
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  max-width:calc(100vw - 40px);
-  padding:13px 16px;
-  border:1px solid var(--b);
-  border-radius:8px;
-  background:var(--p2);
-  display:none;
-  z-index:20;
-}
-@media(max-width:700px) {
-  main { padding:14px; }
-  header { padding:14px; }
-  .table-wrap { overflow-x:auto; }
-  table { min-width:680px; }
-  .form-grid { grid-template-columns:1fr; }
-  .full { grid-column:auto; }
-}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:10px 13px;background:var(--surface2);color:var(--text);transition:.18s}
+button:hover{border-color:var(--olive2);filter:brightness(1.12)}
+.primary{background:var(--olive);color:#10120f;border-color:var(--olive);font-weight:800}
+.danger{color:#ffaaa1;border-color:#75443d}
+input,select,textarea{width:100%;padding:11px 12px;border-radius:8px;border:1px solid var(--border);background:#11140f;color:var(--text);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--olive2)}
+label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+header{height:auto;min-height:78px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 28px;background:#151812;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:13px}
+.crest{width:44px;height:48px;background:var(--olive);color:#10120f;display:grid;place-items:center;font-weight:1000;font-size:21px;clip-path:polygon(10% 0,90% 0,100% 15%,90% 75%,50% 100%,10% 75%,0 15%)}
+.brand h1{font-size:17px;letter-spacing:2px;margin:0}
+.brand small{display:block;color:var(--sand);font-size:10px;letter-spacing:2px;margin-top:6px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+main{max-width:1500px;margin:auto;padding:25px 28px}
+.eyebrow{font-size:10px;color:var(--olive2);letter-spacing:2.5px;text-transform:uppercase}
+.page-title{display:flex;justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap;margin-bottom:23px}
+.page-title h2{font-size:27px;letter-spacing:1px;margin:7px 0}
+.muted{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:18px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--olive)}
+.stat-label{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.stat-value{font-size:30px;font-weight:800;margin-top:10px}
+.stat-note{font-size:11px;color:var(--muted);margin-top:5px}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}
+.search{flex:1;min-width:210px}
+.filter{width:auto;min-width:155px}
+.panel{border:1px solid var(--border);background:var(--surface);border-radius:11px;overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.panel-head h3{font-size:12px;letter-spacing:1.6px;margin:0}
+.count{border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--sand);font-size:11px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:950px}
+th{text-align:left;color:var(--muted);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;background:#171a14;padding:13px 15px}
+td{padding:13px 15px;border-top:1px solid #2b3026;font-size:12px;vertical-align:middle}
+tbody tr:hover{background:#23281e}
+.person{display:flex;align-items:center;gap:11px;min-width:190px}
+.avatar{width:39px;height:39px;flex-shrink:0;border-radius:8px;background:#303829;border:1px solid #4b563c;display:grid;place-items:center;color:var(--sand);font-weight:800;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.person-name{font-weight:750;font-size:13px}
+.person-sub{font-size:10px;color:var(--muted);margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:5px;font-size:10px;font-weight:800;white-space:nowrap}
+.pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.rank-0,.rank-1{background:#59472d;color:#f0d19a}
+.rank-2,.rank-3{background:#3f4b31;color:#c5d7a4}
+.rank-4,.rank-5{background:#35483b;color:#a7d5b1}
+.rank-6,.rank-7{background:#303f42;color:#b2d9d8}
+.rank-8,.rank-9{background:#383b3a;color:#c4c9bd}
+.div-doa{background:#51472f;color:#e8d3a4}
+.div-swat{background:#49352e;color:#e9b9a4}
+.div-none{background:#30342d;color:#b5b9ab}
+.status-active{background:#253d2c;color:#9ad5a3}
+.status-absent{background:#4c3e27;color:#efd18c}
+.training-list{display:flex;gap:4px;flex-wrap:wrap;max-width:230px}
+.training{padding:4px 6px;border:1px solid #46503a;background:#272e22;color:#c8d5b0;border-radius:4px;font-size:9px}
+.row-actions{display:flex;gap:5px}
+.row-actions button{padding:7px 8px;font-size:11px}
+.empty{padding:45px 20px;text-align:center;color:var(--muted)}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login-card{max-width:420px;width:100%;padding:28px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
+.login-card h2{margin:27px 0 8px}
+.field{margin-bottom:14px;min-width:0}
+#login button[type=submit]{width:100%;margin-top:8px}
+#app{display:none}
+#modal{display:none;position:fixed;inset:0;z-index:5;background:#000c;padding:20px;overflow:auto;align-items:center;justify-content:center}
+.modal-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;width:100%;max-width:850px;margin:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:19px 22px;border-bottom:1px solid var(--border)}
+.modal-head h2{font-size:17px;margin:0}
+.modal-body{padding:22px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.full{grid-column:1/-1}
+.check-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.check-item{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid var(--border);border-radius:7px;background:#151812;font-size:11px;cursor:pointer}
+.check-item input{width:auto;accent-color:var(--olive)}
+.section-label{grid-column:1/-1;font-size:10px;letter-spacing:1.7px;color:var(--olive2);padding-bottom:8px;border-bottom:1px solid var(--border);margin-top:6px}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:16px 22px;border-top:1px solid var(--border)}
+#notice{display:none;position:fixed;right:20px;bottom:20px;z-index:9;padding:14px 18px;background:var(--surface2);border:1px solid var(--olive);border-radius:9px;max-width:calc(100% - 40px)}
+#photoPreview{width:65px;height:65px;object-fit:cover;border-radius:9px;border:1px solid var(--border);display:none;margin-top:8px}
+@media(max-width:850px){main{padding:18px 14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:15px}.check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.form-grid{grid-template-columns:1fr}.full,.section-label{grid-column:auto}.check-grid{grid-template-columns:1fr}.page-title h2{font-size:22px}.brand h1{font-size:13px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:25px}}
 </style>
 </head>
-
 <body>
 
-<!-- ÉCRAN DE CONNEXION -->
-<section id="loginScreen">
+<section id="login">
   <div class="login-card">
-    <div class="brand" style="margin-bottom:24px">
-      <div class="logo">B</div>
-      <div>
-        <h1>BCSO TACTICAL COMMAND</h1>
-        <div class="subtitle">SYSTÈME DE GESTION DU PERSONNEL</div>
-      </div>
+    <div class="brand">
+      <div class="crest">B</div>
+      <div><h1>BCSO TACTICAL</h1><small>COMMAND · PERSONNEL</small></div>
     </div>
-
-    <h2>Connexion</h2>
+    <h2>Accès sécurisé</h2>
     <p class="muted">Connecte-toi avec ton compte autorisé.</p>
-
     <form id="loginForm">
-      <div class="field">
-        <label for="email">Adresse e-mail</label>
-        <input id="email" type="email" autocomplete="username" required>
-      </div>
-
-      <div class="field">
-        <label for="password">Mot de passe</label>
-        <input id="password" type="password" autocomplete="current-password" required>
-      </div>
-
-      <button class="primary" id="loginButton" type="submit">
-        Se connecter
-      </button>
-
+      <div class="field"><label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <button class="primary" id="loginButton" type="submit">Se connecter →</button>
       <p id="loginError" class="muted" role="status"></p>
     </form>
   </div>
 </section>
 
-<!-- APPLICATION -->
 <div id="app">
+<header>
+  <div class="brand">
+    <div class="crest">B</div>
+    <div><h1>BCSO TACTICAL COMMAND</h1><small>PERSONNEL MANAGEMENT SYSTEM</small></div>
+  </div>
+  <div class="header-actions">
+    <span id="userLabel" class="muted"></span>
+    <button id="refreshButton">↻ Actualiser</button>
+    <button id="logoutButton">Déconnexion</button>
+  </div>
+</header>
 
-  <header>
-    <div class="brand">
-      <div class="logo">B</div>
-      <div>
-        <h1>BCSO TACTICAL COMMAND</h1>
-        <div class="subtitle">BLAINE COUNTY SHERIFF'S OFFICE · PERSONNEL</div>
-      </div>
+<main>
+  <div class="page-title">
+    <div><div class="eyebrow">Administration / Effectifs</div><h2>Registre du personnel</h2><div class="muted">Gestion des agents · Blaine County Sheriff's Office</div></div>
+    <button class="primary" id="addButton">＋ Nouvel agent</button>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-label">Effectif total</div><div class="stat-value" id="totalCount">—</div><div class="stat-note">Agents enregistrés</div></div>
+    <div class="stat"><div class="stat-label">Agents actifs</div><div class="stat-value" id="activeCount">—</div><div class="stat-note">Statut actif</div></div>
+    <div class="stat"><div class="stat-label">En absence</div><div class="stat-value" id="absentCount">—</div><div class="stat-note">Absences enregistrées</div></div>
+    <div class="stat"><div class="stat-label">Divisions</div><div class="stat-value" id="divisionCount">—</div><div class="stat-note">DOA · SWAT · Aucune</div></div>
+  </section>
+
+  <div class="toolbar">
+    <input class="search" id="searchInput" placeholder="⌕  Rechercher un nom, matricule, ID...">
+    <select class="filter" id="divisionFilter"><option value="">Toutes les divisions</option><option>DOA</option><option>SWAT</option><option>Aucune</option></select>
+    <select class="filter" id="statusFilter"><option value="">Tous les statuts</option><option>Actif</option><option>Absence</option></select>
+    <button id="clearFilters">Réinitialiser</button>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h3>◈ Effectifs BCSO</h3><span class="count" id="resultCount">0 AGENT</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Agent</th><th>Matricule</th><th>Grade</th><th>Division</th><th>Statut</th><th>Formations</th><th>Actions</th></tr></thead>
+        <tbody id="peopleTable"></tbody>
+      </table>
     </div>
-
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <span id="userLabel" class="muted"></span>
-      <button id="refreshButton" type="button">Actualiser</button>
-      <button id="logoutButton" type="button">Déconnexion</button>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- STATISTIQUES -->
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-label">Effectif total</div>
-        <div class="stat-number" id="totalCount">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">En service</div>
-        <div class="stat-number status-active" id="activeCount">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">Absents</div>
-        <div class="stat-number status-absent" id="absentCount">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">Hors service</div>
-        <div class="stat-number status-inactive" id="inactiveCount">0</div>
-      </div>
-    </div>
-
-    <!-- RECHERCHE ET FILTRES -->
-    <div class="toolbar">
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Rechercher un nom, matricule, grade..."
-      >
-
-      <select id="divisionFilter">
-        <option value="">Toutes les divisions</option>
-        <option>Patrol</option>
-        <option>Traffic</option>
-        <option>Detective</option>
-        <option>SWAT</option>
-        <option>Administration</option>
-      </select>
-
-      <button class="primary" id="addButton" type="button">
-        + Ajouter un agent
-      </button>
-    </div>
-
-    <!-- TABLEAU DU PERSONNEL -->
-    <section class="panel">
-      <div class="panel-heading">
-        <h2>REGISTRE DU PERSONNEL</h2>
-        <span class="muted" id="resultCount">0 agent</span>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Matricule</th>
-              <th>Nom</th>
-              <th>Grade</th>
-              <th>Division</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="peopleTable"></tbody>
-        </table>
-      </div>
-
-      <div id="emptyState" class="empty" style="display:none">
-        Aucun agent trouvé.
-      </div>
-    </section>
-
-    <p class="muted" style="font-size:12px">
-      BCSO Tactical Command · Accès réservé au personnel autorisé.
-    </p>
-
-  </main>
+    <div id="emptyState" class="empty" style="display:none">Aucun agent correspondant aux filtres.</div>
+  </section>
+  <p class="muted" style="font-size:10px;margin-top:18px;letter-spacing:1px">BCSO TACTICAL COMMAND · ACCÈS RÉSERVÉ · PERSONNEL</p>
+</main>
 </div>
 
-<!-- FENÊTRE AJOUT / MODIFICATION -->
 <div id="modal">
-  <div class="modal-card">
-    <h2 id="modalTitle">Ajouter un agent</h2>
-
+  <section class="modal-card">
+    <div class="modal-head"><div><div class="eyebrow">Dossier individuel</div><h2 id="modalTitle">Nouvel agent</h2></div><button type="button" id="closeModal">✕</button></div>
     <form id="employeeForm">
-      <input type="hidden" id="employeeId">
-
-      <div class="form-grid">
-
-        <div class="field">
-          <label for="name">Nom complet *</label>
-          <input id="name" maxlength="100" required>
+      <div class="modal-body">
+        <input type="hidden" id="employeeId">
+        <div class="form-grid">
+          <div class="section-label">01 / Identité</div>
+          <div class="field"><label for="firstName">Prénom *</label><input id="firstName" required maxlength="80"></div>
+          <div class="field"><label for="lastName">Nom *</label><input id="lastName" required maxlength="80"></div>
+          <div class="field"><label for="badge">Matricule *</label><input id="badge" required maxlength="30" placeholder="Ex. 1042"></div>
+          <div class="field"><label for="hireDate">Date d'embauche</label><input id="hireDate" type="date"></div>
+          <div class="field"><label for="gameId">ID en jeu</label><input id="gameId" maxlength="80"></div>
+          <div class="field"><label for="discordId">ID Discord</label><input id="discordId" maxlength="80"></div>
+          <div class="field full"><label for="photoUrl">Photo — URL ou import</label><input id="photoUrl" type="url" placeholder="https://..."><input id="photoFile" type="file" accept="image/*" style="margin-top:8px"><img id="photoPreview" alt="Aperçu de la photo"><p class="muted" style="font-size:10px">L'import local est un aperçu. Pour enregistrer durablement une photo, configure Supabase Storage ou utilise une URL accessible.</p></div>
+          <div class="section-label">02 / Affectation</div>
+          <div class="field"><label for="grade">Grade *</label><select id="grade" required></select></div>
+          <div class="field"><label for="division">Division *</label><select id="division"><option>DOA</option><option>SWAT</option><option>Aucune</option></select></div>
+          <div class="field"><label for="status">Statut *</label><select id="status"><option>Actif</option><option>Absence</option></select></div>
+          <div class="field"><label for="specializations">Spécialisations</label><select id="specializations" multiple size="4"><option>Air Support Unit</option><option>K-9 Unit</option><option>Traffic Division</option><option>Marine Unit</option><option>Media Relation Division</option><option>Recruteur Formateur</option></select><small class="muted">Maintiens Ctrl (ou Cmd sur Mac) pour plusieurs choix.</small></div>
+          <div class="field"><label for="absenceStart">Début d'absence</label><input id="absenceStart" type="date"></div>
+          <div class="field"><label for="absenceEnd">Fin d'absence</label><input id="absenceEnd" type="date"></div>
+          <div class="section-label">03 / Formations validées</div>
+          <div class="full"><div class="check-grid" id="trainingGrid"></div></div>
         </div>
-
-        <div class="field">
-          <label for="badge">Matricule *</label>
-          <input id="badge" maxlength="30" required>
-        </div>
-
-        <div class="field">
-          <label for="grade">Grade *</label>
-          <select id="grade">
-            <option>Sheriff</option>
-            <option>Undersheriff</option>
-            <option>Lieutenant</option>
-            <option>Sergeant II</option>
-            <option>Sergeant I</option>
-            <option>Senior Deputy</option>
-            <option>Deputy III</option>
-            <option>Deputy II</option>
-            <option>Deputy I</option>
-            <option selected>Deputy Trainee</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="division">Division *</label>
-          <select id="division">
-            <option>Patrol</option>
-            <option>Traffic</option>
-            <option>Detective</option>
-            <option>SWAT</option>
-            <option>Administration</option>
-          </select>
-        </div>
-
-        <div class="field full">
-          <label for="status">Statut *</label>
-          <select id="status">
-            <option value="Active">En service</option>
-            <option value="Absent">Absent</option>
-            <option value="Inactive">Hors service</option>
-          </select>
-        </div>
-
       </div>
-
-      <div class="modal-actions">
-        <button type="button" id="cancelButton">Annuler</button>
-        <button type="submit" class="primary" id="saveButton">Enregistrer</button>
-      </div>
+      <div class="modal-foot"><button type="button" id="cancelButton">Annuler</button><button class="primary" type="submit" id="saveButton">Enregistrer le dossier</button></div>
     </form>
-  </div>
+  </section>
 </div>
 
 <div id="notice" role="status"></div>
 
 <script>
-/* =========================================================
-   CONFIGURATION SUPABASE
-   Remplace la valeur ci-dessous par ta clé Publishable.
-   N'insère jamais une clé sb_secret_ dans du HTML public.
-   ========================================================= */
-
 const SUPABASE_URL = "https://nnyhchfpelmhhsjoklto.supabase.co";
-const SUPABASE_KEY = "sb_publishable_pIqMhTDyx6KRlLik-8GP4w_yIIedUrp";
+const SUPABASE_KEY = "COLLE_ICI_TA_CLE_PUBLISHABLE";
 const TABLE = "employees";
 
-/* =========================================================
-   INITIALISATION
-   ========================================================= */
-
+const GRADES = [
+  "Sheriff","Undersheriff","Lieutenant","Sergeant II","Sergeant I",
+  "Senior Deputy","Deputy III","Deputy II","Deputy I","Deputy Trainee"
+];
+const TRAININGS = [
+  "Procédure","Radio","MDT","Négociateur","Lead Terrain","Lead OP",
+  "First Lincoln","Conduite","Dispatcher","PPA I","PPA II","PPA III","PPA IV","PPA V"
+];
+const SPECIALIZATIONS = [
+  "Air Support Unit","K-9 Unit","Traffic Division","Marine Unit",
+  "Media Relation Division","Recruteur Formateur"
+];
 const $ = id => document.getElementById(id);
-
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let people = [];
-let noticeTimeout;
+let noticeTimer;
+let photoDataUrl = "";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-/* =========================================================
-   NOTIFICATIONS ET SÉCURITÉ D'AFFICHAGE
-   ========================================================= */
-
-function showNotice(message) {
-  $("notice").textContent = message;
-  $("notice").style.display = "block";
-
-  clearTimeout(noticeTimeout);
-
-  noticeTimeout = setTimeout(() => {
-    $("notice").style.display = "none";
-  }, 3500);
+function notify(message){
+  $("notice").textContent=message;
+  $("notice").style.display="block";
+  clearTimeout(noticeTimer);
+  noticeTimer=setTimeout(()=>$("notice").style.display="none",4000);
 }
-
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[character]);
+function esc(value){
+  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
-
-function label(status) {
-  if (status === "Active") return "En service";
-  if (status === "Absent") return "Absent";
-  return "Hors service";
+function parseList(value){
+  if(Array.isArray(value)) return value;
+  if(!value) return [];
+  try { const result=JSON.parse(value); return Array.isArray(result)?result:[]; }
+  catch { return String(value).split(",").map(x=>x.trim()).filter(Boolean); }
 }
-
-function cls(status) {
-  if (status === "Active") return "status-active";
-  if (status === "Absent") return "status-absent";
-  return "status-inactive";
+function gradeIndex(grade){
+  const i=GRADES.indexOf(grade);
+  return i<0?GRADES.length:i;
 }
-
-/* =========================================================
-   STATISTIQUES
-   ========================================================= */
-
-function stats() {
-  $("totalCount").textContent = people.length;
-
-  $("activeCount").textContent =
-    people.filter(person => person.status === "Active").length;
-
-  $("absentCount").textContent =
-    people.filter(person => person.status === "Absent").length;
-
-  $("inactiveCount").textContent =
-    people.filter(person => person.status === "Inactive").length;
+function fullName(p){return [p.first_name,p.last_name].filter(Boolean).join(" ") || p.name || "Agent sans nom";}
+function initials(p){return fullName(p).split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase();}
+function imageUrl(p){return p.photo_url || p.photo || "";}
+function renderPhoto(p){
+  const url=imageUrl(p);
+  return url ? `<div class="avatar"><img src="${esc(url)}" alt="" onerror="this.parentElement.textContent='${esc(initials(p))}'"></div>` : `<div class="avatar">${esc(initials(p))}</div>`;
 }
-
-/* =========================================================
-   AFFICHAGE DU PERSONNEL
-   ========================================================= */
-
-function render() {
-  const query = $("searchInput").value.trim().toLowerCase();
-  const division = $("divisionFilter").value;
-
-  const list = people.filter(person => {
-    const searchable = [
-      person.name,
-      person.badge,
-      person.grade,
-      person.division,
-      person.status
-    ].join(" ").toLowerCase();
-
-    return searchable.includes(query) &&
-      (!division || person.division === division);
-  });
-
-  $("resultCount").textContent =
-    list.length + " agent" + (list.length === 1 ? "" : "s");
-
-  $("emptyState").style.display = list.length ? "none" : "block";
-
-  $("peopleTable").innerHTML = list.map(person => `
-    <tr>
-      <td>
-        <span class="badge">${esc(person.badge)}</span>
-      </td>
-
-      <td>
-        <strong>${esc(person.name)}</strong>
-      </td>
-
-      <td>${esc(person.grade)}</td>
-      <td>${esc(person.division)}</td>
-
-      <td>
-        <span class="${cls(person.status)}">
-          ${label(person.status)}
-        </span>
-      </td>
-
-      <td>
-        <div class="actions">
-          <button type="button" data-edit="${esc(person.id)}">
-            Modifier
-          </button>
-
-          <button
-            type="button"
-            class="danger"
-            data-del="${esc(person.id)}"
-          >
-            Supprimer
-          </button>
-        </div>
-      </td>
-    </tr>
-  `).join("");
-
-  stats();
+function trainingBadges(p){
+  const list=parseList(p.trainings);
+  return list.length ? `<div class="training-list">${list.map(x=>`<span class="training">${esc(x)}</span>`).join("")}</div>` : `<span class="muted">—</span>`;
 }
-
-/* =========================================================
-   CHARGEMENT DES AGENTS DEPUIS SUPABASE
-   ========================================================= */
-
-async function load() {
-  $("peopleTable").innerHTML = `
-    <tr>
-      <td colspan="6" class="empty">Chargement...</td>
-    </tr>
-  `;
-
-  const { data, error } = await db
-    .from(TABLE)
-    .select("id,name,badge,grade,division,status")
-    .order("name");
-
-  if (error) {
+function updateStats(){
+  $("totalCount").textContent=people.length;
+  $("activeCount").textContent=people.filter(p=>p.status==="Actif").length;
+  $("absentCount").textContent=people.filter(p=>p.status==="Absence").length;
+  $("divisionCount").textContent=new Set(people.map(p=>p.division).filter(x=>x&&x!=="Aucune")).size;
+}
+function render(){
+  const q=$("searchInput").value.trim().toLowerCase();
+  const div=$("divisionFilter").value;
+  const status=$("statusFilter").value;
+  const filtered=people.filter(p=>{
+    const hay=[fullName(p),p.badge,p.game_id,p.discord_id,p.grade,p.division,...parseList(p.trainings),...parseList(p.specializations)].join(" ").toLowerCase();
+    return hay.includes(q)&&(!div||p.division===div)&&(!status||p.status===status);
+  }).sort((a,b)=>gradeIndex(a.grade)-gradeIndex(b.grade)||fullName(a).localeCompare(fullName(b),"fr"));
+  $("resultCount").textContent=`${filtered.length} AGENT${filtered.length===1?"":"S"}`;
+  $("emptyState").style.display=filtered.length?"none":"block";
+  $("peopleTable").innerHTML=filtered.map(p=>{
+    const rank=gradeIndex(p.grade);
+    const divClass=p.division==="DOA"?"div-doa":p.division==="SWAT"?"div-swat":"div-none";
+    const statusClass=p.status==="Absence"?"status-absent":"status-active";
+    return `<tr>
+      <td><div class="person">${renderPhoto(p)}<div><div class="person-name">${esc(fullName(p))}</div><div class="person-sub">${esc(p.discord_id||"ID Discord non renseigné")}</div></div></div></td>
+      <td><strong>${esc(p.badge||"—")}</strong></td>
+      <td><span class="pill rank-${rank}">${esc(p.grade||"Non défini")}</span></td>
+      <td><span class="pill ${divClass}">${esc(p.division||"Aucune")}</span></td>
+      <td><span class="pill ${statusClass}">${esc(p.status||"Actif")}</span></td>
+      <td>${trainingBadges(p)}</td>
+      <td><div class="row-actions"><button type="button" data-view="${esc(p.id)}">Fiche</button><button type="button" data-edit="${esc(p.id)}">Modifier</button><button type="button" class="danger" data-delete="${esc(p.id)}">✕</button></div></td>
+    </tr>`;
+  }).join("");
+  updateStats();
+}
+async function load(){
+  const {data,error}=await db.from(TABLE).select("*");
+  if(error){
     console.error(error);
-
-    people = [];
-    $("peopleTable").innerHTML = "";
-    $("emptyState").style.display = "block";
-    $("emptyState").textContent =
-      "Impossible de charger le personnel. Vérifie la table et les politiques RLS dans Supabase.";
-
-    showNotice("Erreur de chargement : " + error.message);
-    stats();
+    notify("Erreur de chargement : "+error.message);
     return;
   }
-
-  people = data || [];
+  people=data||[];
   render();
 }
-
-/* =========================================================
-   OUVRIR ET FERMER LE FORMULAIRE
-   ========================================================= */
-
-function openModal(person = null) {
+function buildOptions(){
+  $("grade").innerHTML=GRADES.map(g=>`<option>${esc(g)}</option>`).join("");
+  $("trainingGrid").innerHTML=TRAININGS.map((t,i)=>`<label class="check-item"><input type="checkbox" name="training" value="${esc(t)}"><span>${esc(t)}</span></label>`).join("");
+}
+function selectedValues(name){
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el=>el.value);
+}
+function setChecked(name,values){
+  const set=new Set(parseList(values));
+  document.querySelectorAll(`input[name="${name}"]`).forEach(el=>el.checked=set.has(el.value));
+}
+function openModal(p=null){
   $("employeeForm").reset();
-
-  $("employeeId").value = person?.id ?? "";
-
-  $("modalTitle").textContent = person
-    ? "Modifier un agent"
-    : "Ajouter un agent";
-
-  if (person) {
-    for (const field of [
-      "name",
-      "badge",
-      "grade",
-      "division",
-      "status"
-    ]) {
-      $(field).value = person[field] ?? "";
-    }
+  $("employeeId").value=p?.id??"";
+  $("modalTitle").textContent=p?"Modifier le dossier":"Nouveau dossier agent";
+  photoDataUrl="";
+  $("photoPreview").style.display="none";
+  $("photoPreview").src="";
+  if(p){
+    $("firstName").value=p.first_name||"";
+    $("lastName").value=p.last_name||"";
+    $("badge").value=p.badge||"";
+    $("hireDate").value=p.hire_date||"";
+    $("gameId").value=p.game_id||"";
+    $("discordId").value=p.discord_id||"";
+    $("photoUrl").value=imageUrl(p);
+    $("grade").value=p.grade||GRADES[GRADES.length-1];
+    $("division").value=p.division||"Aucune";
+    $("status").value=p.status||"Actif";
+    $("absenceStart").value=p.absence_start||"";
+    $("absenceEnd").value=p.absence_end||"";
+    setChecked("training",p.trainings);
+    [...$("specializations").options].forEach(o=>o.selected=parseList(p.specializations).includes(o.value));
+    if(imageUrl(p)){$("photoPreview").src=imageUrl(p);$("photoPreview").style.display="block";}
   } else {
-    $("grade").value = "Deputy Trainee";
-    $("division").value = "Patrol";
-    $("status").value = "Active";
+    $("grade").value="Deputy Trainee";
+    $("division").value="Aucune";
+    $("status").value="Actif";
+    setChecked("training",[]);
   }
-
-  $("modal").style.display = "flex";
-  $("name").focus();
+  $("modal").style.display="flex";
 }
-
-function closeModal() {
-  $("modal").style.display = "none";
-}
-
-/* =========================================================
-   AJOUT ET MODIFICATION D'UN AGENT
-   ========================================================= */
-
-async function save(event) {
-  event.preventDefault();
-
-  const id = $("employeeId").value;
-
-  const person = {
-    name: $("name").value.trim(),
-    badge: $("badge").value.trim(),
-    grade: $("grade").value,
-    division: $("division").value,
-    status: $("status").value
+function closeModal(){$("modal").style.display="none";}
+$("photoFile").addEventListener("change",()=>{
+  const file=$("photoFile").files[0];
+  if(!file)return;
+  if(file.size>4*1024*1024){notify("Photo trop volumineuse (maximum 4 Mo).");$("photoFile").value="";return;}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    photoDataUrl=reader.result;
+    $("photoPreview").src=photoDataUrl;
+    $("photoPreview").style.display="block";
   };
-
-  if (!person.name || !person.badge) {
-    showNotice("Remplis le nom et le matricule.");
+  reader.readAsDataURL(file);
+});
+$("photoUrl").addEventListener("input",()=>{
+  if(photoDataUrl)return;
+  const url=$("photoUrl").value.trim();
+  $("photoPreview").style.display=url?"block":"none";
+  $("photoPreview").src=url;
+});
+$("status").addEventListener("change",()=>{
+  const absent=$("status").value==="Absence";
+  $("absenceStart").required=absent;
+  $("absenceEnd").required=absent;
+});
+$("employeeForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const id=$("employeeId").value;
+  const photoUrl=photoDataUrl||$("photoUrl").value.trim()||null;
+  const record={
+    first_name:$("firstName").value.trim(),
+    last_name:$("lastName").value.trim(),
+    badge:$("badge").value.trim(),
+    hire_date:$("hireDate").value||null,
+    game_id:$("gameId").value.trim()||null,
+    discord_id:$("discordId").value.trim()||null,
+    photo_url:photoUrl,
+    grade:$("grade").value,
+    division:$("division").value,
+    status:$("status").value,
+    trainings:selectedValues("training"),
+    specializations:[...$("specializations").selectedOptions].map(o=>o.value),
+    absence_start:$("absenceStart").value||null,
+    absence_end:$("absenceEnd").value||null
+  };
+  if(record.status==="Absence"&&(!record.absence_start||!record.absence_end)){
+    notify("Indique les dates de début et de fin d'absence.");
     return;
   }
-
-  $("saveButton").disabled = true;
-
-  try {
-    let result;
-
-    if (id) {
-      result = await db
-        .from(TABLE)
-        .update(person)
-        .eq("id", id)
-        .select();
-    } else {
-      result = await db
-        .from(TABLE)
-        .insert(person)
-        .select();
-    }
-
-    if (result.error) {
-      throw result.error;
-    }
-
+  if(record.absence_start&&record.absence_end&&record.absence_end<record.absence_start){
+    notify("La fin d'absence doit être après le début.");
+    return;
+  }
+  $("saveButton").disabled=true;
+  try{
+    const result=id
+      ?await db.from(TABLE).update(record).eq("id",id)
+      :await db.from(TABLE).insert(record);
+    if(result.error)throw result.error;
     closeModal();
     await load();
-
-    showNotice(id ? "Agent modifié." : "Agent ajouté.");
-
-  } catch (error) {
-    console.error(error);
-    showNotice("Échec de l'enregistrement : " + error.message);
-
-  } finally {
-    $("saveButton").disabled = false;
-  }
-}
-
-/* =========================================================
-   SUPPRESSION D'UN AGENT
-   ========================================================= */
-
-async function remove(id) {
-  const person = people.find(
-    item => String(item.id) === String(id)
-  );
-
-  if (!person) return;
-
-  const confirmed = confirm(
-    `Supprimer l'agent ${person.name} (${person.badge}) ?`
-  );
-
-  if (!confirmed) return;
-
-  const { error } = await db
-    .from(TABLE)
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    showNotice("Échec de la suppression : " + error.message);
-    return;
-  }
-
+    notify(id?"Dossier mis à jour.":"Agent ajouté au registre.");
+  }catch(err){
+    console.error(err);
+    notify("Enregistrement impossible : "+err.message);
+  }finally{$("saveButton").disabled=false;}
+});
+async function removePerson(id){
+  const p=people.find(x=>String(x.id)===String(id));
+  if(!p||!confirm(`Supprimer le dossier de ${fullName(p)} ?`))return;
+  const {error}=await db.from(TABLE).delete().eq("id",id);
+  if(error){notify("Suppression impossible : "+error.message);return;}
   await load();
-  showNotice("Agent supprimé.");
+  notify("Dossier supprimé.");
 }
-
-/* =========================================================
-   CONNEXION ET DÉCONNEXION
-   ========================================================= */
-
-function app(user) {
-  $("loginScreen").style.display = "none";
-  $("app").style.display = "block";
-
-  $("userLabel").textContent = user.email || "Utilisateur connecté";
-
+function viewPerson(id){
+  const p=people.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  const specs=parseList(p.specializations);
+  const trainings=parseList(p.trainings);
+  alert([
+    fullName(p),
+    "Matricule : "+(p.badge||"—"),
+    "Date d'embauche : "+(p.hire_date||"—"),
+    "ID en jeu : "+(p.game_id||"—"),
+    "ID Discord : "+(p.discord_id||"—"),
+    "Grade : "+(p.grade||"—"),
+    "Division : "+(p.division||"Aucune"),
+    "Statut : "+(p.status||"Actif"),
+    "Absence : "+(p.absence_start||"—")+" → "+(p.absence_end||"—"),
+    "Formations : "+(trainings.join(", ")||"Aucune"),
+    "Spécialisations : "+(specs.join(", ")||"Aucune")
+  ].join("\n"));
+}
+$("peopleTable").addEventListener("click",e=>{
+  const edit=e.target.closest("[data-edit]");
+  const del=e.target.closest("[data-delete]");
+  const view=e.target.closest("[data-view]");
+  if(edit){const p=people.find(x=>String(x.id)===edit.dataset.edit);if(p)openModal(p);}
+  if(del)removePerson(del.dataset.delete);
+  if(view)viewPerson(view.dataset.view);
+});
+$("searchInput").addEventListener("input",render);
+$("divisionFilter").addEventListener("change",render);
+$("statusFilter").addEventListener("change",render);
+$("clearFilters").addEventListener("click",()=>{
+  $("searchInput").value="";
+  $("divisionFilter").value="";
+  $("statusFilter").value="";
+  render();
+});
+$("addButton").addEventListener("click",()=>openModal());
+$("closeModal").addEventListener("click",closeModal);
+$("cancelButton").addEventListener("click",closeModal);
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeModal();});
+$("refreshButton").addEventListener("click",load);
+$("logoutButton").addEventListener("click",async()=>{
+  const {error}=await db.auth.signOut();
+  if(error)notify(error.message);
+});
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  $("loginError").textContent="";
+  $("loginButton").disabled=true;
+  try{
+    const {data,error}=await db.auth.signInWithPassword({
+      email:$("email").value.trim(),
+      password:$("password").value
+    });
+    if(error)throw error;
+    showApp(data.user);
+  }catch(err){$("loginError").textContent="Connexion impossible : "+err.message;}
+  finally{$("loginButton").disabled=false;}
+});
+function showApp(user){
+  $("login").style.display="none";
+  $("app").style.display="block";
+  $("userLabel").textContent=user.email||"Utilisateur connecté";
   load();
 }
-
-function login() {
-  $("app").style.display = "none";
-  $("loginScreen").style.display = "grid";
+function showLogin(){
+  $("app").style.display="none";
+  $("login").style.display="grid";
 }
-
-$("loginForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  $("loginError").textContent = "";
-
-  if (SUPABASE_KEY === "COLLE_ICI_TA_CLE_PUBLISHABLE") {
-    $("loginError").textContent =
-      "Ajoute la clé Publishable Supabase dans le code.";
+db.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_IN"&&session?.user)showApp(session.user);
+  if(event==="SIGNED_OUT")showLogin();
+});
+async function init(){
+  buildOptions();
+  if(SUPABASE_KEY==="COLLE_ICI_TA_CLE_PUBLISHABLE"){
+    $("loginError").textContent="Ajoute ta clé Publishable Supabase dans le code.";
     return;
   }
-
-  $("loginButton").disabled = true;
-  $("loginButton").textContent = "Connexion...";
-
-  try {
-    const { data, error } = await db.auth.signInWithPassword({
-      email: $("email").value.trim(),
-      password: $("password").value
-    });
-
-    if (error) {
-      $("loginError").textContent =
-        "Connexion impossible : " + error.message;
-      return;
-    }
-
-    app(data.user);
-
-  } catch (error) {
-    $("loginError").textContent =
-      "Une erreur est survenue : " + error.message;
-
-  } finally {
-    $("loginButton").disabled = false;
-    $("loginButton").textContent = "Se connecter";
-  }
-});
-
-$("logoutButton").addEventListener("click", async () => {
-  const { error } = await db.auth.signOut();
-
-  if (error) {
-    showNotice(error.message);
-  } else {
-    login();
-  }
-});
-
-/* =========================================================
-   BOUTONS, RECHERCHE ET ÉVÉNEMENTS
-   ========================================================= */
-
-$("refreshButton").addEventListener("click", load);
-
-$("addButton").addEventListener("click", () => {
-  openModal();
-});
-
-$("cancelButton").addEventListener("click", closeModal);
-
-$("employeeForm").addEventListener("submit", save);
-
-$("searchInput").addEventListener("input", render);
-
-$("divisionFilter").addEventListener("change", render);
-
-$("peopleTable").addEventListener("click", event => {
-  const editButton = event.target.closest("[data-edit]");
-  const deleteButton = event.target.closest("[data-del]");
-
-  if (editButton) {
-    const person = people.find(
-      item => String(item.id) === editButton.dataset.edit
-    );
-
-    if (person) openModal(person);
-  }
-
-  if (deleteButton) {
-    remove(deleteButton.dataset.del);
-  }
-});
-
-$("modal").addEventListener("click", event => {
-  if (event.target === $("modal")) {
-    closeModal();
-  }
-});
-
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape") {
-    closeModal();
-  }
-});
-
-/* =========================================================
-   VÉRIFICATION DE LA SESSION AU DÉMARRAGE
-   ========================================================= */
-
-async function init() {
-  if (SUPABASE_KEY === "COLLE_ICI_TA_CLE_PUBLISHABLE") {
-    login();
-    return;
-  }
-
-  const { data, error } = await db.auth.getSession();
-
-  if (error || !data.session) {
-    login();
-    return;
-  }
-
-  app(data.session.user);
+  const {data,error}=await db.auth.getSession();
+  if(!error&&data.session)showApp(data.session.user);
 }
-
-db.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_IN" && session?.user) {
-    app(session.user);
-  } else if (event === "SIGNED_OUT") {
-    login();
-  }
-});
-
 init();
 </script>
-
 </body>
 </html>
