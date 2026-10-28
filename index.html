@@ -95,6 +95,189 @@ tbody tr:hover{background:#23281e}
 #photoPreview{width:65px;height:65px;object-fit:cover;border-radius:9px;border:1px solid var(--border);display:none;margin-top:8px}
 @media(max-width:850px){main{padding:18px 14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:15px}.check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:550px){.form-grid{grid-template-columns:1fr}.full,.section-label{grid-column:auto}.check-grid{grid-template-columns:1fr}.page-title h2{font-size:22px}.brand h1{font-size:13px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:25px}}
+
+
+/* Fiche individuelle */
+#detailModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, .82);
+  padding: 20px;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+
+.detail-card {
+  width: 100%;
+  max-width: 780px;
+  margin: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px #0009;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  background: #171a14;
+}
+
+.detail-header h2 {
+  margin: 5px 0 0;
+  font-size: 17px;
+}
+
+.detail-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(120deg, #252c20, #191d17 70%);
+}
+
+.detail-avatar {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: #303829;
+  border: 1px solid #596548;
+  color: var(--sand);
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.detail-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-name {
+  font-size: 23px;
+  font-weight: 850;
+  margin-bottom: 8px;
+}
+
+.detail-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.detail-content {
+  padding: 22px;
+}
+
+.detail-section {
+  margin-bottom: 23px;
+}
+
+.detail-section-title {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  color: var(--olive2);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 9px;
+  margin-bottom: 13px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.detail-field {
+  min-width: 0;
+  padding: 12px;
+  background: #151812;
+  border: 1px solid #2e3528;
+  border-radius: 8px;
+}
+
+.detail-label {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.detail-value {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.detail-tag {
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid #46503a;
+  background: #272e22;
+  color: #c8d5b0;
+  font-size: 11px;
+}
+
+.detail-empty {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.detail-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 550px) {
+  #detailModal {
+    padding: 8px;
+    align-items: flex-start;
+  }
+
+  .detail-identity,
+  .detail-content {
+    padding: 16px;
+  }
+
+  .detail-avatar {
+    width: 65px;
+    height: 65px;
+  }
+
+  .detail-name {
+    font-size: 18px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+  
 </style>
 </head>
 <body>
@@ -194,6 +377,34 @@ tbody tr:hover{background:#23281e}
   </section>
 </div>
 
+
+<div id="detailModal">
+  <section class="detail-card">
+    <div class="detail-header">
+      <div>
+        <div class="eyebrow">BCSO / DOSSIER AGENT</div>
+        <h2>Fiche individuelle</h2>
+      </div>
+      <button type="button" id="closeDetail">✕ Fermer</button>
+    </div>
+
+    <div class="detail-identity">
+      <div class="detail-avatar" id="detailAvatar"></div>
+      <div>
+        <div class="detail-name" id="detailName">Agent</div>
+        <div class="detail-badges" id="detailBadges"></div>
+      </div>
+    </div>
+
+    <div class="detail-content" id="detailContent"></div>
+
+    <div class="detail-footer">
+      <button type="button" id="closeDetailFooter">Fermer la fiche</button>
+    </div>
+  </section>
+</div>
+
+  
 <div id="notice" role="status"></div>
 
 <script>
@@ -407,7 +618,88 @@ async function removePerson(id){
   await load();
   notify("Dossier supprimé.");
 }
-function viewPerson(id){
+
+function viewPerson(id) {
+  const p = people.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  const specs = parseList(p.specializations);
+  const trainings = parseList(p.trainings);
+  const url = imageUrl(p);
+
+  const field = (label, value) => `
+    <div class="detail-field">
+      <div class="detail-label">${esc(label)}</div>
+      <div class="detail-value">${esc(value || "Non renseigné")}</div>
+    </div>`;
+
+  const tags = (items, emptyText) => items.length
+    ? `<div class="detail-tags">${items.map(item =>
+        `<span class="detail-tag">${esc(item)}</span>`
+      ).join("")}</div>`
+    : `<div class="detail-empty">${esc(emptyText)}</div>`;
+
+  $("detailName").textContent = fullName(p);
+  $("detailAvatar").innerHTML = url
+    ? `<img src="${esc(url)}" alt="Photo de ${esc(fullName(p))}"
+         onerror="this.parentElement.textContent='${esc(initials(p))}'">`
+    : esc(initials(p));
+
+  $("detailBadges").innerHTML = `
+    <span class="pill rank-${gradeIndex(p.grade)}">${esc(p.grade || "Grade non défini")}</span>
+    <span class="pill ${p.division === "DOA" ? "div-doa" : p.division === "SWAT" ? "div-swat" : "div-none"}">${esc(p.division || "Aucune")}</span>
+    <span class="pill ${p.status === "Absence" ? "status-absent" : "status-active"}">${esc(p.status || "Actif")}</span>
+  `;
+
+  $("detailContent").innerHTML = `
+    <section class="detail-section">
+      <h3 class="detail-section-title">01 / IDENTITÉ ET CONTACT</h3>
+      <div class="detail-grid">
+        ${field("Matricule", p.badge)}
+        ${field("Date d'embauche", p.hire_date)}
+        ${field("ID en jeu", p.game_id)}
+        ${field("ID Discord", p.discord_id)}
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h3 class="detail-section-title">02 / AFFECTATION ET ABSENCE</h3>
+      <div class="detail-grid">
+        ${field("Division", p.division || "Aucune")}
+        ${field("Statut", p.status || "Actif")}
+        ${field("Début d'absence", p.absence_start)}
+        ${field("Fin d'absence", p.absence_end)}
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h3 class="detail-section-title">03 / SPÉCIALISATIONS</h3>
+      ${tags(specs, "Aucune spécialisation attribuée")}
+    </section>
+
+    <section class="detail-section">
+      <h3 class="detail-section-title">04 / FORMATIONS VALIDÉES</h3>
+      ${tags(trainings, "Aucune formation enregistrée")}
+    </section>
+  `;
+
+  $("detailModal").style.display = "flex";
+}
+
+function closeDetail() {
+  $("detailModal").style.display = "none";
+}
+
+$("closeDetail").addEventListener("click", closeDetail);
+$("closeDetailFooter").addEventListener("click", closeDetail);
+$("detailModal").addEventListener("click", e => {
+  if (e.target === $("detailModal")) closeDetail();
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeDetail();
+});
+
   const p=people.find(x=>String(x.id)===String(id));
   if(!p)return;
   const specs=parseList(p.specializations);
