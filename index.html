@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BCSO Tactical Command</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --bg:#10120f; --surface:#191d17; --surface2:#22271f;
@@ -17,6 +18,16 @@ body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Segoe UI,Ar
 button,input,select,textarea{font:inherit}
 button{cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:10px 13px;background:var(--surface2);color:var(--text);transition:.18s}
 button:hover{border-color:var(--olive2);filter:brightness(1.12)}
+
+.specialization{
+  padding:4px 6px;
+  border:1px solid #596548;
+  background:#303829;
+  color:#d5dfbd;
+  border-radius:4px;
+  font-size:9px;
+}
+
 .primary{background:var(--olive);color:#10120f;border-color:var(--olive);font-weight:800}
 .danger{color:#ffaaa1;border-color:#75443d}
 input,select,textarea{width:100%;padding:11px 12px;border-radius:8px;border:1px solid var(--border);background:#11140f;color:var(--text);outline:none}
@@ -336,7 +347,7 @@ tbody tr:hover{background:#23281e}
     <div class="panel-head"><h3>◈ Effectifs BCSO</h3><span class="count" id="resultCount">0 AGENT</span></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Agent</th><th>Matricule</th><th>Grade</th><th>Division</th><th>Statut</th><th>Formations</th><th>Actions</th></tr></thead>
+        <thead><tr><th>Agent</th><th>Matricule</th><th>Grade</th><th>Division</th><th>Statut</th><th>Formations</th><th>Spécialisations</th><th>Actions</th></tr></thead>
         <tbody id="peopleTable"></tbody>
       </table>
     </div>
@@ -460,6 +471,12 @@ function trainingBadges(p){
   const list=parseList(p.trainings);
   return list.length ? `<div class="training-list">${list.map(x=>`<span class="training">${esc(x)}</span>`).join("")}</div>` : `<span class="muted">—</span>`;
 }
+function specializationBadges(p){
+  const list=parseList(p.specializations);
+  return list.length
+    ? `<div class="training-list">${list.map(x=>`<span class="specialization">${esc(x)}</span>`).join("")}</div>`
+    : `<span class="muted">—</span>`;
+}
 function updateStats(){
   $("totalCount").textContent=people.length;
   $("activeCount").textContent=people.filter(p=>p.status==="Actif").length;
@@ -487,8 +504,15 @@ function render(){
       <td><span class="pill ${divClass}">${esc(p.division||"Aucune")}</span></td>
       <td><span class="pill ${statusClass}">${esc(p.status||"Actif")}</span></td>
       <td>${trainingBadges(p)}</td>
-      <td><div class="row-actions"><button type="button" data-view="${esc(p.id)}">Fiche</button><button type="button" data-edit="${esc(p.id)}">Modifier</button><button type="button" class="danger" data-delete="${esc(p.id)}">✕</button></div></td>
-    </tr>`;
+      <td>${specializationBadges(p)}</td>
+      <td>
+  <div class="row-actions">
+    <button type="button" data-view="${esc(p.id)}">Fiche</button>
+    <button type="button" data-edit="${esc(p.id)}">Modifier</button>
+    <button type="button" class="danger" data-delete="${esc(p.id)}">✕</button>
+  </div>
+</td>
+</tr>`;
   }).join("");
   updateStats();
 }
