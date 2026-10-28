@@ -700,24 +700,6 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeDetail();
 });
 
-  const p=people.find(x=>String(x.id)===String(id));
-  if(!p)return;
-  const specs=parseList(p.specializations);
-  const trainings=parseList(p.trainings);
-  alert([
-    fullName(p),
-    "Matricule : "+(p.badge||"—"),
-    "Date d'embauche : "+(p.hire_date||"—"),
-    "ID en jeu : "+(p.game_id||"—"),
-    "ID Discord : "+(p.discord_id||"—"),
-    "Grade : "+(p.grade||"—"),
-    "Division : "+(p.division||"Aucune"),
-    "Statut : "+(p.status||"Actif"),
-    "Absence : "+(p.absence_start||"—")+" → "+(p.absence_end||"—"),
-    "Formations : "+(trainings.join(", ")||"Aucune"),
-    "Spécialisations : "+(specs.join(", ")||"Aucune")
-  ].join("\n"));
-}
 $("peopleTable").addEventListener("click",e=>{
   const edit=e.target.closest("[data-edit]");
   const del=e.target.closest("[data-delete]");
