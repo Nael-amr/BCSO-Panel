@@ -376,7 +376,19 @@ tbody tr:hover{background:#23281e}
           <div class="field"><label for="grade">Grade *</label><select id="grade" required></select></div>
           <div class="field"><label for="division">Division *</label><select id="division"><option>DOA</option><option>SWAT</option><option>Aucune</option></select></div>
           <div class="field"><label for="status">Statut *</label><select id="status"><option>Actif</option><option>Absence</option></select></div>
-          <div class="field"><label for="specializations">Spécialisations</label><select id="specializations" multiple size="4"><option>Air Support Unit</option><option>K-9 Unit</option><option>Traffic Division</option><option>Marine Unit</option><option>Media Relation Division</option><option>Recruteur Formateur</option></select><small class="muted">Maintiens Ctrl (ou Cmd sur Mac) pour plusieurs choix.</small></div>
+          <div class="field">
+  <label>Spécialisations</label>
+  <div class="field">
+  <label>Spécialisations</label>
+  <div class="check-grid" id="specializationsGrid">
+    <label class="check-item"><input type="checkbox" name="specialization" value="Air Support Unit"><span>Air Support Unit</span></label>
+    <label class="check-item"><input type="checkbox" name="specialization" value="K-9 Unit"><span>K-9 Unit</span></label>
+    <label class="check-item"><input type="checkbox" name="specialization" value="Traffic Division"><span>Traffic Division</span></label>
+    <label class="check-item"><input type="checkbox" name="specialization" value="Marine Unit"><span>Marine Unit</span></label>
+    <label class="check-item"><input type="checkbox" name="specialization" value="Media Relation Division"><span>Media Relation Division</span></label>
+    <label class="check-item"><input type="checkbox" name="specialization" value="Recruteur Formateur"><span>Recruteur Formateur</span></label>
+  </div>
+</div>
           <div class="field"><label for="absenceStart">Début d'absence</label><input id="absenceStart" type="date"></div>
           <div class="field"><label for="absenceEnd">Fin d'absence</label><input id="absenceEnd" type="date"></div>
           <div class="section-label">03 / Formations validées</div>
@@ -558,13 +570,14 @@ function openModal(p=null){
     $("absenceStart").value=p.absence_start||"";
     $("absenceEnd").value=p.absence_end||"";
     setChecked("training",p.trainings);
-    [...$("specializations").options].forEach(o=>o.selected=parseList(p.specializations).includes(o.value));
+    setChecked("specialization", p.specializations);
     if(imageUrl(p)){$("photoPreview").src=imageUrl(p);$("photoPreview").style.display="block";}
   } else {
     $("grade").value="Deputy Trainee";
     $("division").value="Aucune";
     $("status").value="Actif";
     setChecked("training",[]);
+    setChecked("specialization", []);
   }
   $("modal").style.display="flex";
 }
@@ -608,7 +621,7 @@ $("employeeForm").addEventListener("submit",async e=>{
     division:$("division").value,
     status:$("status").value,
     trainings:selectedValues("training"),
-    specializations:[...$("specializations").selectedOptions].map(o=>o.value),
+    specializations:selectedValues("specialization"),
     absence_start:$("absenceStart").value||null,
     absence_end:$("absenceEnd").value||null
   };
