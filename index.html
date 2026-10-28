@@ -2,233 +2,208 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BCSO Tactical Command</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root {
-  --bg: #0b0e12;
-  --panel: #131922;
-  --panel2: #1a222d;
-  --border: #293442;
-  --text: #e8edf3;
-  --muted: #91a0b2;
-  --gold: #d5ad59;
-  --green: #45c486;
-  --red: #ef6262;
+  --bg:#0b0e12;
+  --p:#131922;
+  --p2:#1a222d;
+  --b:#293442;
+  --t:#e8edf3;
+  --m:#91a0b2;
+  --g:#d5ad59;
+  --green:#45c486;
+  --red:#ef6262;
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
-}
-button, input, select {
-  font: inherit;
-}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--t); font:15px Arial; }
+button,input,select { font:inherit; }
 button {
-  cursor: pointer;
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 10px 14px;
-  color: var(--text);
-  background: var(--panel2);
+  cursor:pointer;
+  border:1px solid var(--b);
+  border-radius:7px;
+  padding:10px 14px;
+  color:var(--t);
+  background:var(--p2);
 }
-button:hover { filter: brightness(1.2); }
+button:disabled { opacity:.6; cursor:wait; }
 .primary {
-  background: var(--gold);
-  color: #151515;
-  border-color: var(--gold);
-  font-weight: bold;
+  background:var(--g);
+  color:#151515;
+  border-color:var(--g);
+  font-weight:bold;
 }
-.danger {
-  color: #fff;
-  background: #722d35;
-  border-color: #9c3c46;
-}
-.muted { color: var(--muted); }
+.danger { background:#722d35; }
+.muted { color:var(--m); }
 header {
-  min-height: 75px;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  flex-wrap: wrap;
-  background: #10151c;
+  padding:18px 24px;
+  border-bottom:1px solid var(--b);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
+  background:#10151c;
 }
-.brand { display: flex; align-items: center; gap: 13px; }
+.brand { display:flex; align-items:center; gap:13px; }
 .logo {
-  width: 43px;
-  height: 43px;
-  display: grid;
-  place-items: center;
-  background: var(--gold);
-  color: #171717;
-  font-size: 22px;
-  font-weight: bold;
-  border-radius: 8px;
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  background:var(--g);
+  color:#171717;
+  font-size:22px;
+  font-weight:bold;
+  border-radius:8px;
 }
-h1 { margin: 0; font-size: 19px; letter-spacing: 1px; }
-.subtitle { margin-top: 5px; color: var(--muted); font-size: 12px; }
-main { max-width: 1200px; margin: auto; padding: 24px; }
+h1 { margin:0; font-size:19px; letter-spacing:1px; }
+.subtitle { margin-top:5px; color:var(--m); font-size:12px; }
+main { max-width:1200px; margin:auto; padding:24px; }
 .stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:14px;
+  margin-bottom:22px;
 }
-.stat, .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+.stat,.panel,.login-card,.modal-card {
+  background:var(--p);
+  border:1px solid var(--b);
+  border-radius:10px;
 }
-.stat { padding: 18px; }
-.stat-label { color: var(--muted); font-size: 12px; text-transform: uppercase; }
-.stat-number { font-size: 30px; font-weight: bold; margin-top: 10px; }
+.stat { padding:18px; }
+.stat-label { color:var(--m); font-size:12px; text-transform:uppercase; }
+.stat-number { font-size:30px; font-weight:bold; margin-top:10px; }
 .toolbar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
 }
-input, select {
-  background: #0d1218;
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 7px;
-  padding: 11px;
-  width: 100%;
-  min-width: 0;
+input,select {
+  background:#0d1218;
+  border:1px solid var(--b);
+  color:var(--t);
+  border-radius:7px;
+  padding:11px;
+  width:100%;
+  min-width:0;
 }
-.toolbar input { flex: 1; min-width: 180px; }
-.toolbar select { width: auto; min-width: 150px; }
-.panel { overflow: hidden; margin-bottom: 20px; }
+.toolbar input { flex:1; min-width:180px; }
+.toolbar select { width:auto; min-width:150px; }
+.panel { overflow:hidden; margin-bottom:20px; }
 .panel-heading {
-  padding: 16px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
+  padding:16px 18px;
+  border-bottom:1px solid var(--b);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
 }
-.panel-heading h2 { margin: 0; font-size: 15px; }
-table { width: 100%; border-collapse: collapse; }
-th, td {
-  padding: 13px 15px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-  font-size: 13px;
+.panel-heading h2 { margin:0; font-size:15px; }
+table { width:100%; border-collapse:collapse; }
+th,td {
+  padding:13px 15px;
+  border-bottom:1px solid var(--b);
+  text-align:left;
+  font-size:13px;
 }
 th {
-  color: var(--muted);
-  font-size: 11px;
-  text-transform: uppercase;
-  background: #10161e;
+  color:var(--m);
+  font-size:11px;
+  text-transform:uppercase;
+  background:#10161e;
 }
-tr:last-child td { border-bottom: 0; }
-tbody tr:hover { background: #19212b; }
+tbody tr:hover { background:#19212b; }
 .badge {
-  display: inline-block;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-size: 11px;
-  background: #273343;
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:5px;
+  font-size:11px;
+  background:#273343;
 }
-.status-active { color: var(--green); }
-.status-absent { color: #f0bd61; }
-.status-inactive { color: var(--red); }
-.actions { display: flex; gap: 6px; }
-.actions button { padding: 7px 9px; font-size: 12px; }
-.empty { padding: 35px; text-align: center; color: var(--muted); }
+.status-active { color:var(--green); }
+.status-absent { color:#f0bd61; }
+.status-inactive { color:var(--red); }
+.actions { display:flex; gap:6px; }
+.actions button { padding:7px 9px; font-size:12px; }
+.empty { padding:35px; text-align:center; color:var(--m); }
 #loginScreen {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 20px;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
 }
-.login-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 28px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.login-card h2 { margin-top: 0; }
-.field { margin: 15px 0; }
+.login-card { width:100%; max-width:400px; padding:28px; }
+.field { margin:15px 0; }
 .field label {
-  display: block;
-  margin-bottom: 7px;
-  font-size: 12px;
-  color: var(--muted);
+  display:block;
+  margin-bottom:7px;
+  font-size:12px;
+  color:var(--m);
 }
-.login-card button { width: 100%; }
-#app { display: none; }
+.login-card button { width:100%; }
+#app { display:none; }
 #modal {
-  position: fixed;
-  inset: 0;
-  background: #000b;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  overflow-y: auto;
-  z-index: 10;
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  overflow:auto;
+  z-index:10;
 }
 .modal-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  width: 100%;
-  max-width: 520px;
-  padding: 22px;
-  margin: auto;
+  width:100%;
+  max-width:520px;
+  padding:22px;
+  margin:auto;
 }
-.modal-card h2 { margin-top: 0; }
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 13px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
 }
-.form-grid .field { margin: 0; }
-.full { grid-column: 1 / -1; }
+.form-grid .field { margin:0; }
+.full { grid-column:1/-1; }
 .modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 9px;
-  margin-top: 20px;
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  margin-top:20px;
 }
 #notice {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  max-width: calc(100vw - 40px);
-  padding: 13px 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--panel2);
-  display: none;
-  z-index: 20;
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  max-width:calc(100vw - 40px);
+  padding:13px 16px;
+  border:1px solid var(--b);
+  border-radius:8px;
+  background:var(--p2);
+  display:none;
+  z-index:20;
 }
-@media(max-width: 700px) {
-  main { padding: 14px; }
-  header { padding: 14px; }
-  .table-wrap { overflow-x: auto; }
-  table { min-width: 680px; }
-  .form-grid { grid-template-columns: 1fr; }
-  .full { grid-column: auto; }
+@media(max-width:700px) {
+  main { padding:14px; }
+  header { padding:14px; }
+  .table-wrap { overflow-x:auto; }
+  table { min-width:680px; }
+  .form-grid { grid-template-columns:1fr; }
+  .full { grid-column:auto; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- ÉCRAN DE CONNEXION -->
 <section id="loginScreen">
   <div class="login-card">
     <div class="brand" style="margin-bottom:24px">
@@ -247,17 +222,24 @@ tbody tr:hover { background: #19212b; }
         <label for="email">Adresse e-mail</label>
         <input id="email" type="email" autocomplete="username" required>
       </div>
+
       <div class="field">
         <label for="password">Mot de passe</label>
         <input id="password" type="password" autocomplete="current-password" required>
       </div>
-      <button class="primary" type="submit" id="loginButton">Se connecter</button>
+
+      <button class="primary" id="loginButton" type="submit">
+        Se connecter
+      </button>
+
       <p id="loginError" class="muted" role="status"></p>
     </form>
   </div>
 </section>
 
+<!-- APPLICATION -->
 <div id="app">
+
   <header>
     <div class="brand">
       <div class="logo">B</div>
@@ -266,51 +248,68 @@ tbody tr:hover { background: #19212b; }
         <div class="subtitle">BLAINE COUNTY SHERIFF'S OFFICE · PERSONNEL</div>
       </div>
     </div>
+
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <span id="userLabel" class="muted"></span>
-      <button id="refreshButton">Actualiser</button>
-      <button id="logoutButton">Déconnexion</button>
+      <button id="refreshButton" type="button">Actualiser</button>
+      <button id="logoutButton" type="button">Déconnexion</button>
     </div>
   </header>
 
   <main>
+
+    <!-- STATISTIQUES -->
     <div class="stats">
       <div class="stat">
         <div class="stat-label">Effectif total</div>
         <div class="stat-number" id="totalCount">0</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">En service</div>
         <div class="stat-number status-active" id="activeCount">0</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">Absents</div>
         <div class="stat-number status-absent" id="absentCount">0</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">Hors service</div>
         <div class="stat-number status-inactive" id="inactiveCount">0</div>
       </div>
     </div>
 
+    <!-- RECHERCHE ET FILTRES -->
     <div class="toolbar">
-      <input id="searchInput" type="search" placeholder="Rechercher un nom, matricule, grade...">
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Rechercher un nom, matricule, grade..."
+      >
+
       <select id="divisionFilter">
         <option value="">Toutes les divisions</option>
-        <option value="Patrol">Patrol</option>
-        <option value="Traffic">Traffic</option>
-        <option value="Detective">Detective</option>
-        <option value="SWAT">SWAT</option>
-        <option value="Administration">Administration</option>
+        <option>Patrol</option>
+        <option>Traffic</option>
+        <option>Detective</option>
+        <option>SWAT</option>
+        <option>Administration</option>
       </select>
-      <button class="primary" id="addButton">+ Ajouter un agent</button>
+
+      <button class="primary" id="addButton" type="button">
+        + Ajouter un agent
+      </button>
     </div>
 
+    <!-- TABLEAU DU PERSONNEL -->
     <section class="panel">
       <div class="panel-heading">
         <h2>REGISTRE DU PERSONNEL</h2>
         <span class="muted" id="resultCount">0 agent</span>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -326,6 +325,7 @@ tbody tr:hover { background: #19212b; }
           <tbody id="peopleTable"></tbody>
         </table>
       </div>
+
       <div id="emptyState" class="empty" style="display:none">
         Aucun agent trouvé.
       </div>
@@ -334,16 +334,20 @@ tbody tr:hover { background: #19212b; }
     <p class="muted" style="font-size:12px">
       BCSO Tactical Command · Accès réservé au personnel autorisé.
     </p>
+
   </main>
 </div>
 
+<!-- FENÊTRE AJOUT / MODIFICATION -->
 <div id="modal">
   <div class="modal-card">
     <h2 id="modalTitle">Ajouter un agent</h2>
+
     <form id="employeeForm">
       <input type="hidden" id="employeeId">
 
       <div class="form-grid">
+
         <div class="field">
           <label for="name">Nom complet *</label>
           <input id="name" maxlength="100" required>
@@ -356,39 +360,40 @@ tbody tr:hover { background: #19212b; }
 
         <div class="field">
           <label for="grade">Grade *</label>
-          <select id="grade" required>
-            <option value="Sheriff">Sheriff</option>
-            <option value="Undersheriff">Undersheriff</option>
-            <option value="Lieutenant">Lieutenant</option>
-            <option value="Sergeant II">Sergeant II</option>
-            <option value="Sergeant I">Sergeant I</option>
-            <option value="Senior Deputy">Senior Deputy</option>
-            <option value="Deputy III">Deputy III</option>
-            <option value="Deputy II">Deputy II</option>
-            <option value="Deputy I">Deputy I</option>
-            <option value="Deputy Trainee">Deputy Trainee</option>
+          <select id="grade">
+            <option>Sheriff</option>
+            <option>Undersheriff</option>
+            <option>Lieutenant</option>
+            <option>Sergeant II</option>
+            <option>Sergeant I</option>
+            <option>Senior Deputy</option>
+            <option>Deputy III</option>
+            <option>Deputy II</option>
+            <option>Deputy I</option>
+            <option selected>Deputy Trainee</option>
           </select>
         </div>
 
         <div class="field">
           <label for="division">Division *</label>
-          <select id="division" required>
-            <option value="Patrol">Patrol</option>
-            <option value="Traffic">Traffic</option>
-            <option value="Detective">Detective</option>
-            <option value="SWAT">SWAT</option>
-            <option value="Administration">Administration</option>
+          <select id="division">
+            <option>Patrol</option>
+            <option>Traffic</option>
+            <option>Detective</option>
+            <option>SWAT</option>
+            <option>Administration</option>
           </select>
         </div>
 
         <div class="field full">
           <label for="status">Statut *</label>
-          <select id="status" required>
+          <select id="status">
             <option value="Active">En service</option>
             <option value="Absent">Absent</option>
             <option value="Inactive">Hors service</option>
           </select>
         </div>
+
       </div>
 
       <div class="modal-actions">
@@ -402,144 +407,211 @@ tbody tr:hover { background: #19212b; }
 <div id="notice" role="status"></div>
 
 <script>
-/*
-  CONFIGURATION SUPABASE
-  Utilise la clé publishable/anon publique de ton projet.
-  Ne mets JAMAIS une clé service_role ou une clé secrète dans ce fichier.
-*/
-const SUPABASE_URL = "https://nnyhchfpelmhhsjoklto.supabase.co";
-const SUPABASE_KEY = "sb_secret_EJPPPw0LZFKFGWGkmXqVVg_iVoYF5bH";
+/* =========================================================
+   CONFIGURATION SUPABASE
+   Remplace la valeur ci-dessous par ta clé Publishable.
+   N'insère jamais une clé sb_secret_ dans du HTML public.
+   ========================================================= */
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = "https://nnyhchfpelmhhsjoklto.supabase.co";
+const SUPABASE_KEY = "sb_publishable_pIqMhTDyx6KRlLik-8GP4w_yIIedUrp";
 const TABLE = "employees";
+
+/* =========================================================
+   INITIALISATION
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
 
 let people = [];
 let noticeTimeout;
 
-const $ = id => document.getElementById(id);
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+/* =========================================================
+   NOTIFICATIONS ET SÉCURITÉ D'AFFICHAGE
+   ========================================================= */
 
 function showNotice(message) {
   $("notice").textContent = message;
   $("notice").style.display = "block";
+
   clearTimeout(noticeTimeout);
+
   noticeTimeout = setTimeout(() => {
     $("notice").style.display = "none";
   }, 3500);
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#039;"
-  })[char]);
+  })[character]);
 }
 
-function statusLabel(status) {
+function label(status) {
   if (status === "Active") return "En service";
   if (status === "Absent") return "Absent";
   return "Hors service";
 }
 
-function statusClass(status) {
+function cls(status) {
   if (status === "Active") return "status-active";
   if (status === "Absent") return "status-absent";
   return "status-inactive";
 }
 
-function updateStats() {
+/* =========================================================
+   STATISTIQUES
+   ========================================================= */
+
+function stats() {
   $("totalCount").textContent = people.length;
+
   $("activeCount").textContent =
     people.filter(person => person.status === "Active").length;
+
   $("absentCount").textContent =
     people.filter(person => person.status === "Absent").length;
+
   $("inactiveCount").textContent =
     people.filter(person => person.status === "Inactive").length;
 }
 
-function renderPeople() {
-  const search = $("searchInput").value.trim().toLowerCase();
+/* =========================================================
+   AFFICHAGE DU PERSONNEL
+   ========================================================= */
+
+function render() {
+  const query = $("searchInput").value.trim().toLowerCase();
   const division = $("divisionFilter").value;
 
-  const filtered = people.filter(person => {
+  const list = people.filter(person => {
     const searchable = [
-      person.name, person.badge, person.grade,
-      person.division, person.status
+      person.name,
+      person.badge,
+      person.grade,
+      person.division,
+      person.status
     ].join(" ").toLowerCase();
 
-    return searchable.includes(search) &&
+    return searchable.includes(query) &&
       (!division || person.division === division);
   });
 
   $("resultCount").textContent =
-    `${filtered.length} agent${filtered.length !== 1 ? "s" : ""}`;
+    list.length + " agent" + (list.length === 1 ? "" : "s");
 
-  $("emptyState").style.display = filtered.length ? "none" : "block";
+  $("emptyState").style.display = list.length ? "none" : "block";
 
-  $("peopleTable").innerHTML = filtered.map(person => `
+  $("peopleTable").innerHTML = list.map(person => `
     <tr>
-      <td><span class="badge">${escapeHTML(person.badge)}</span></td>
-      <td><strong>${escapeHTML(person.name)}</strong></td>
-      <td>${escapeHTML(person.grade)}</td>
-      <td>${escapeHTML(person.division)}</td>
       <td>
-        <span class="${statusClass(person.status)}">
-          ${escapeHTML(statusLabel(person.status))}
+        <span class="badge">${esc(person.badge)}</span>
+      </td>
+
+      <td>
+        <strong>${esc(person.name)}</strong>
+      </td>
+
+      <td>${esc(person.grade)}</td>
+      <td>${esc(person.division)}</td>
+
+      <td>
+        <span class="${cls(person.status)}">
+          ${label(person.status)}
         </span>
       </td>
+
       <td>
         <div class="actions">
-          <button data-edit="${escapeHTML(person.id)}">Modifier</button>
-          <button class="danger" data-delete="${escapeHTML(person.id)}">Supprimer</button>
+          <button type="button" data-edit="${esc(person.id)}">
+            Modifier
+          </button>
+
+          <button
+            type="button"
+            class="danger"
+            data-del="${esc(person.id)}"
+          >
+            Supprimer
+          </button>
         </div>
       </td>
     </tr>
   `).join("");
 
-  updateStats();
+  stats();
 }
 
-async function loadEmployees() {
-  $("peopleTable").innerHTML =
-    '<tr><td colspan="6" class="empty">Chargement...</td></tr>';
+/* =========================================================
+   CHARGEMENT DES AGENTS DEPUIS SUPABASE
+   ========================================================= */
+
+async function load() {
+  $("peopleTable").innerHTML = `
+    <tr>
+      <td colspan="6" class="empty">Chargement...</td>
+    </tr>
+  `;
 
   const { data, error } = await db
     .from(TABLE)
-    .select("id, name, badge, grade, division, status")
-    .order("name", { ascending: true });
+    .select("id,name,badge,grade,division,status")
+    .order("name");
 
   if (error) {
-    console.error("Erreur de chargement :", error);
+    console.error(error);
+
+    people = [];
     $("peopleTable").innerHTML = "";
     $("emptyState").style.display = "block";
     $("emptyState").textContent =
       "Impossible de charger le personnel. Vérifie la table et les politiques RLS dans Supabase.";
+
     showNotice("Erreur de chargement : " + error.message);
+    stats();
     return;
   }
 
   people = data || [];
-  renderPeople();
+  render();
 }
+
+/* =========================================================
+   OUVRIR ET FERMER LE FORMULAIRE
+   ========================================================= */
 
 function openModal(person = null) {
   $("employeeForm").reset();
+
   $("employeeId").value = person?.id ?? "";
-  $("modalTitle").textContent =
-    person ? "Modifier un agent" : "Ajouter un agent";
+
+  $("modalTitle").textContent = person
+    ? "Modifier un agent"
+    : "Ajouter un agent";
 
   if (person) {
-    $("name").value = person.name ?? "";
-    $("badge").value = person.badge ?? "";
-    $("grade").value = person.grade ?? "Deputy Trainee";
-    $("division").value = person.division ?? "Patrol";
-    $("status").value = person.status ?? "Active";
+    for (const field of [
+      "name",
+      "badge",
+      "grade",
+      "division",
+      "status"
+    ]) {
+      $(field).value = person[field] ?? "";
+    }
   } else {
-    $("status").value = "Active";
     $("grade").value = "Deputy Trainee";
     $("division").value = "Patrol";
+    $("status").value = "Active";
   }
 
   $("modal").style.display = "flex";
@@ -550,12 +622,16 @@ function closeModal() {
   $("modal").style.display = "none";
 }
 
-async function saveEmployee(event) {
+/* =========================================================
+   AJOUT ET MODIFICATION D'UN AGENT
+   ========================================================= */
+
+async function save(event) {
   event.preventDefault();
 
   const id = $("employeeId").value;
 
-  const employee = {
+  const person = {
     name: $("name").value.trim(),
     badge: $("badge").value.trim(),
     grade: $("grade").value,
@@ -563,13 +639,12 @@ async function saveEmployee(event) {
     status: $("status").value
   };
 
-  if (!employee.name || !employee.badge) {
+  if (!person.name || !person.badge) {
     showNotice("Remplis le nom et le matricule.");
     return;
   }
 
   $("saveButton").disabled = true;
-  $("saveButton").textContent = "Enregistrement...";
 
   try {
     let result;
@@ -577,37 +652,50 @@ async function saveEmployee(event) {
     if (id) {
       result = await db
         .from(TABLE)
-        .update(employee)
+        .update(person)
         .eq("id", id)
         .select();
     } else {
       result = await db
         .from(TABLE)
-        .insert(employee)
+        .insert(person)
         .select();
     }
 
-    if (result.error) throw result.error;
+    if (result.error) {
+      throw result.error;
+    }
 
     closeModal();
-    await loadEmployees();
+    await load();
+
     showNotice(id ? "Agent modifié." : "Agent ajouté.");
+
   } catch (error) {
-    console.error("Erreur d'enregistrement :", error);
+    console.error(error);
     showNotice("Échec de l'enregistrement : " + error.message);
+
   } finally {
     $("saveButton").disabled = false;
-    $("saveButton").textContent = "Enregistrer";
   }
 }
 
-async function deletePerson(id) {
-  const person = people.find(item => String(item.id) === String(id));
+/* =========================================================
+   SUPPRESSION D'UN AGENT
+   ========================================================= */
+
+async function remove(id) {
+  const person = people.find(
+    item => String(item.id) === String(id)
+  );
+
   if (!person) return;
 
-  if (!confirm(`Supprimer l'agent ${person.name} (${person.badge}) ?`)) {
-    return;
-  }
+  const confirmed = confirm(
+    `Supprimer l'agent ${person.name} (${person.badge}) ?`
+  );
+
+  if (!confirmed) return;
 
   const { error } = await db
     .from(TABLE)
@@ -615,23 +703,28 @@ async function deletePerson(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erreur de suppression :", error);
     showNotice("Échec de la suppression : " + error.message);
     return;
   }
 
-  await loadEmployees();
+  await load();
   showNotice("Agent supprimé.");
 }
 
-function showApp(user) {
+/* =========================================================
+   CONNEXION ET DÉCONNEXION
+   ========================================================= */
+
+function app(user) {
   $("loginScreen").style.display = "none";
   $("app").style.display = "block";
+
   $("userLabel").textContent = user.email || "Utilisateur connecté";
-  loadEmployees();
+
+  load();
 }
 
-function showLogin() {
+function login() {
   $("app").style.display = "none";
   $("loginScreen").style.display = "grid";
 }
@@ -640,91 +733,126 @@ $("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   $("loginError").textContent = "";
-  $("loginButton").disabled = true;
-  $("loginButton").textContent = "Connexion...";
 
-  const { data, error } = await db.auth.signInWithPassword({
-    email: $("email").value.trim(),
-    password: $("password").value
-  });
-
-  $("loginButton").disabled = false;
-  $("loginButton").textContent = "Se connecter";
-
-  if (error) {
+  if (SUPABASE_KEY === "COLLE_ICI_TA_CLE_PUBLISHABLE") {
     $("loginError").textContent =
-      "Connexion impossible : " + error.message;
+      "Ajoute la clé Publishable Supabase dans le code.";
     return;
   }
 
-  showApp(data.user);
+  $("loginButton").disabled = true;
+  $("loginButton").textContent = "Connexion...";
+
+  try {
+    const { data, error } = await db.auth.signInWithPassword({
+      email: $("email").value.trim(),
+      password: $("password").value
+    });
+
+    if (error) {
+      $("loginError").textContent =
+        "Connexion impossible : " + error.message;
+      return;
+    }
+
+    app(data.user);
+
+  } catch (error) {
+    $("loginError").textContent =
+      "Une erreur est survenue : " + error.message;
+
+  } finally {
+    $("loginButton").disabled = false;
+    $("loginButton").textContent = "Se connecter";
+  }
 });
 
 $("logoutButton").addEventListener("click", async () => {
   const { error } = await db.auth.signOut();
+
   if (error) {
-    showNotice("Erreur de déconnexion : " + error.message);
-    return;
+    showNotice(error.message);
+  } else {
+    login();
   }
-  showLogin();
 });
 
-$("refreshButton").addEventListener("click", loadEmployees);
-$("addButton").addEventListener("click", () => openModal());
+/* =========================================================
+   BOUTONS, RECHERCHE ET ÉVÉNEMENTS
+   ========================================================= */
+
+$("refreshButton").addEventListener("click", load);
+
+$("addButton").addEventListener("click", () => {
+  openModal();
+});
+
 $("cancelButton").addEventListener("click", closeModal);
-$("employeeForm").addEventListener("submit", saveEmployee);
-$("searchInput").addEventListener("input", renderPeople);
-$("divisionFilter").addEventListener("change", renderPeople);
+
+$("employeeForm").addEventListener("submit", save);
+
+$("searchInput").addEventListener("input", render);
+
+$("divisionFilter").addEventListener("change", render);
 
 $("peopleTable").addEventListener("click", event => {
   const editButton = event.target.closest("[data-edit]");
-  const deleteButton = event.target.closest("[data-delete]");
+  const deleteButton = event.target.closest("[data-del]");
 
   if (editButton) {
     const person = people.find(
       item => String(item.id) === editButton.dataset.edit
     );
+
     if (person) openModal(person);
   }
 
   if (deleteButton) {
-    deletePerson(deleteButton.dataset.delete);
+    remove(deleteButton.dataset.del);
   }
 });
 
 $("modal").addEventListener("click", event => {
-  if (event.target === $("modal")) closeModal();
+  if (event.target === $("modal")) {
+    closeModal();
+  }
 });
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeModal();
+  if (event.key === "Escape") {
+    closeModal();
+  }
 });
 
-async function initialize() {
-  const { data, error } = await db.auth.getSession();
+/* =========================================================
+   VÉRIFICATION DE LA SESSION AU DÉMARRAGE
+   ========================================================= */
 
-  if (error) {
-    console.error(error);
-    showLogin();
+async function init() {
+  if (SUPABASE_KEY === "COLLE_ICI_TA_CLE_PUBLISHABLE") {
+    login();
     return;
   }
 
-  if (data.session) {
-    showApp(data.session.user);
-  } else {
-    showLogin();
+  const { data, error } = await db.auth.getSession();
+
+  if (error || !data.session) {
+    login();
+    return;
   }
+
+  app(data.session.user);
 }
 
 db.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_IN" && session?.user) {
-    showApp(session.user);
+    app(session.user);
   } else if (event === "SIGNED_OUT") {
-    showLogin();
+    login();
   }
 });
 
-initialize();
+init();
 </script>
 
 </body>
