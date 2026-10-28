@@ -61,6 +61,15 @@ main{max-width:1500px;margin:auto;padding:25px 28px}
 table{width:100%;border-collapse:collapse;min-width:950px}
 th{text-align:left;color:var(--muted);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;background:#171a14;padding:13px 15px}
 td{padding:13px 15px;border-top:1px solid #2b3026;font-size:12px;vertical-align:middle}
+/* Séparation visuelle entre les catégories de grades */
+#peopleTable tr.grade-group-start td {
+  border-top: 12px solid var(--bg);
+}
+
+/* Pas d'espace avant le premier groupe */
+#peopleTable tr.grade-group-start:first-child td {
+  border-top: 0;
+}
 tbody tr:hover{background:#23281e}
 .person{display:flex;align-items:center;gap:11px;min-width:190px}
 .avatar{width:39px;height:39px;flex-shrink:0;border-radius:8px;background:#303829;border:1px solid #4b563c;display:grid;place-items:center;color:var(--sand);font-weight:800;overflow:hidden}
@@ -378,8 +387,6 @@ tbody tr:hover{background:#23281e}
           <div class="field"><label for="status">Statut *</label><select id="status"><option>Actif</option><option>Absence</option></select></div>
           <div class="field">
   <label>Spécialisations</label>
-  <div class="field">
-  <label>Spécialisations</label>
   <div class="check-grid" id="specializationsGrid">
     <label class="check-item"><input type="checkbox" name="specialization" value="Air Support Unit"><span>Air Support Unit</span></label>
     <label class="check-item"><input type="checkbox" name="specialization" value="K-9 Unit"><span>K-9 Unit</span></label>
@@ -388,8 +395,7 @@ tbody tr:hover{background:#23281e}
     <label class="check-item"><input type="checkbox" name="specialization" value="Media Relation Division"><span>Media Relation Division</span></label>
     <label class="check-item"><input type="checkbox" name="specialization" value="Recruteur Formateur"><span>Recruteur Formateur</span></label>
   </div>
-</div>
-          <div class="field"><label for="absenceStart">Début d'absence</label><input id="absenceStart" type="date"></div>
+</div> <div class="field"><label for="absenceStart">Début d'absence</label><input id="absenceStart" type="date"></div>
           <div class="field"><label for="absenceEnd">Fin d'absence</label><input id="absenceEnd" type="date"></div>
           <div class="section-label">03 / Formations validées</div>
           <div class="full"><div class="check-grid" id="trainingGrid"></div></div>
@@ -495,37 +501,58 @@ function updateStats(){
   $("absentCount").textContent=people.filter(p=>p.status==="Absence").length;
   $("divisionCount").textContent=new Set(people.map(p=>p.division).filter(x=>x&&x!=="Aucune")).size;
 }
+
 function render(){
   const q=$("searchInput").value.trim().toLowerCase();
   const div=$("divisionFilter").value;
   const status=$("statusFilter").value;
+
   const filtered=people.filter(p=>{
-    const hay=[fullName(p),p.badge,p.game_id,p.discord_id,p.grade,p.division,...parseList(p.trainings),...parseList(p.specializations)].join(" ").toLowerCase();
-    return hay.includes(q)&&(!div||p.division===div)&&(!status||p.status===status);
-  }).sort((a,b)=>gradeIndex(a.grade)-gradeIndex(b.grade)||fullName(a).localeCompare(fullName(b),"fr"));
+    const hay=[
+      fullName(p),p.badge,p.game_id,p.discord_id,p.grade,p.division,
+      ...parseList(p.trainings),...parseList(p.specializations)
+    ].join(" ").toLowerCase();
+
+    return hay.includes(q)
+      &&(!div||p.division===div)
+      &&(!status||p.status===status);
+  }).sort((a,b)=>
+    gradeIndex(a.grade)-gradeIndex(b.grade)
+    ||fullName(a).localeCompare(fullName(b),"fr")
+  );
+
   $("resultCount").textContent=`${filtered.length} AGENT${filtered.length===1?"":"S"}`;
   $("emptyState").style.display=filtered.length?"none":"block";
+
+  let previousGrade=null;
+
   $("peopleTable").innerHTML=filtered.map(p=>{
     const rank=gradeIndex(p.grade);
     const divClass=p.division==="DOA"?"div-doa":p.division==="SWAT"?"div-swat":"div-none";
     const statusClass=p.status==="Absence"?"status-absent":"status-active";
-    return `<tr>
+    const currentGrade=p.grade||"Non défini";
+    const isNewGrade=currentGrade!==previousGrade;
+
+    previousGrade=currentGrade;
+
+    return `<tr class="${isNewGrade?"grade-group-start":""}">
       <td><div class="person">${renderPhoto(p)}<div><div class="person-name">${esc(fullName(p))}</div><div class="person-sub">${esc(p.discord_id||"ID Discord non renseigné")}</div></div></div></td>
       <td><strong>${esc(p.badge||"—")}</strong></td>
-      <td><span class="pill rank-${rank}">${esc(p.grade||"Non défini")}</span></td>
+      <td><span class="pill rank-${rank}">${esc(currentGrade)}</span></td>
       <td><span class="pill ${divClass}">${esc(p.division||"Aucune")}</span></td>
       <td><span class="pill ${statusClass}">${esc(p.status||"Actif")}</span></td>
       <td>${trainingBadges(p)}</td>
       <td>${specializationBadges(p)}</td>
       <td>
-  <div class="row-actions">
-    <button type="button" data-view="${esc(p.id)}">Fiche</button>
-    <button type="button" data-edit="${esc(p.id)}">Modifier</button>
-    <button type="button" class="danger" data-delete="${esc(p.id)}">✕</button>
-  </div>
-</td>
-</tr>`;
+        <div class="row-actions">
+          <button type="button" data-view="${esc(p.id)}">Fiche</button>
+          <button type="button" data-edit="${esc(p.id)}">Modifier</button>
+          <button type="button" class="danger" data-delete="${esc(p.id)}">✕</button>
+        </div>
+      </td>
+    </tr>`;
   }).join("");
+
   updateStats();
 }
 async function load(){
