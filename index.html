@@ -5,19 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BCSO Tactical Command</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root {
-  --bg:#10120f; --surface:#191d17; --surface2:#22271f;
-  --border:#363d2d; --olive:#78865a; --olive2:#a5b582;
-  --sand:#c9b990; --text:#eeeede; --muted:#9da394;
-  --green:#83bd83; --red:#d7776c; --amber:#d6b66d;
+:root{
+  --bg:#10120f;--surface:#191d17;--surface2:#22271f;--border:#363d2d;
+  --olive:#78865a;--olive2:#a5b582;--sand:#c9b990;--text:#eeeede;
+  --muted:#9da394;--green:#83bd83;--red:#d7776c;--amber:#d6b66d;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Segoe UI,Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:10px 13px;background:var(--surface2);color:var(--text);transition:.18s}
 button:hover{border-color:var(--olive2);filter:brightness(1.12)}
+button:disabled{opacity:.55;cursor:wait}
 .primary{background:var(--olive);color:#10120f;border-color:var(--olive);font-weight:800}
 .danger{color:#ffaaa1;border-color:#75443d}
 input,select,textarea{width:100%;padding:11px 12px;border-radius:8px;border:1px solid var(--border);background:#11140f;color:var(--text);outline:none}
@@ -69,10 +68,8 @@ tbody tr:hover{background:#23281e}
 .div-doa{background:#51472f;color:#e8d3a4}
 .div-swat{background:#49352e;color:#e9b9a4}
 .div-none{background:#30342d;color:#b5b9ab}
-.status-active{background:#253d2c;color:#9ad5a3}
-.status-absent{background:#4c3e27;color:#efd18c}
-.status-assigned{background:#253d2c;color:#9ad5a3}
-.status-unassigned{background:#4c3e27;color:#efd18c}
+.status-active,.status-assigned{background:#253d2c;color:#9ad5a3}
+.status-absent,.status-unassigned{background:#4c3e27;color:#efd18c}
 .training-list{display:flex;gap:4px;flex-wrap:wrap;max-width:230px}
 .training{padding:4px 6px;border:1px solid #46503a;background:#272e22;color:#c8d5b0;border-radius:4px;font-size:9px}
 .specialization{padding:4px 6px;border:1px solid #596548;background:#303829;color:#d5dfbd;border-radius:4px;font-size:9px}
@@ -122,19 +119,18 @@ tbody tr:hover{background:#23281e}
 .detail-footer{display:flex;justify-content:flex-end;gap:8px;padding:16px 22px;border-top:1px solid var(--border)}
 .detail-photo{max-width:100%;max-height:350px;object-fit:contain;border-radius:9px;border:1px solid var(--border)}
 .nav-active{background:var(--olive);color:#10120f;border-color:var(--olive);font-weight:800}
+.vehicle-model-card{padding:13px;border:1px solid var(--border);background:#151812;border-radius:8px}
+.vehicle-model-card strong{display:block;font-size:13px;margin-bottom:5px}
+.vehicle-model-card small{color:var(--muted);font-size:10px}
 @media(max-width:850px){main{padding:18px 14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:15px}.check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:550px){.form-grid{grid-template-columns:1fr}.full,.section-label{grid-column:auto}.check-grid{grid-template-columns:1fr}.page-title h2{font-size:22px}.brand h1{font-size:13px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:25px}.detail-identity,.detail-content{padding:16px}.detail-avatar{width:65px;height:65px}.detail-name{font-size:18px}.detail-grid{grid-template-columns:1fr}.detailModal{padding:8px;align-items:flex-start}}
 </style>
 </head>
-
 <body>
 
 <section id="login">
   <div class="login-card">
-    <div class="brand">
-      <div class="crest">B</div>
-      <div><h1>BCSO TACTICAL</h1><small>COMMAND · PERSONNEL</small></div>
-    </div>
+    <div class="brand"><div class="crest">B</div><div><h1>BCSO TACTICAL</h1><small>COMMAND · PERSONNEL</small></div></div>
     <h2>Accès sécurisé</h2>
     <p class="muted">Connecte-toi avec ton compte autorisé.</p>
     <form id="loginForm">
@@ -148,19 +144,12 @@ tbody tr:hover{background:#23281e}
 
 <div id="app">
 <header>
-  <div class="brand">
-    <div class="crest">B</div>
-    <div><h1>BCSO TACTICAL COMMAND</h1><small>PERSONNEL & VEHICLE MANAGEMENT SYSTEM</small></div>
-  </div>
-  <div class="header-actions">
-    <span id="userLabel" class="muted"></span>
-    <button id="refreshButton">↻ Actualiser</button>
-    <button id="logoutButton">Déconnexion</button>
-  </div>
+  <div class="brand"><div class="crest">B</div><div><h1>BCSO TACTICAL COMMAND</h1><small>PERSONNEL & VEHICLE MANAGEMENT SYSTEM</small></div></div>
+  <div class="header-actions"><span id="userLabel" class="muted"></span><button id="refreshButton">↻ Actualiser</button><button id="logoutButton">Déconnexion</button></div>
 </header>
 
 <div class="toolbar" style="padding:18px 28px 0;max-width:1500px;margin:auto">
-  <button type="button" id="employeesTab" class="nav-active">Employés</button>
+  <button type="button" id="employeesTab">Employés</button>
   <button type="button" id="vehiclesTab">Véhicules</button>
 </div>
 
@@ -170,29 +159,24 @@ tbody tr:hover{background:#23281e}
     <div><div class="eyebrow">Administration / Effectifs</div><h2>Registre du personnel</h2><div class="muted">Gestion des agents · Blaine County Sheriff's Office</div></div>
     <button class="primary" id="addButton">＋ Nouvel agent</button>
   </div>
-
   <section class="stats">
     <div class="stat"><div class="stat-label">Effectif total</div><div class="stat-value" id="totalCount">—</div><div class="stat-note">Agents enregistrés</div></div>
     <div class="stat"><div class="stat-label">Agents actifs</div><div class="stat-value" id="activeCount">—</div><div class="stat-note">Statut actif</div></div>
     <div class="stat"><div class="stat-label">En absence</div><div class="stat-value" id="absentCount">—</div><div class="stat-note">Absences enregistrées</div></div>
     <div class="stat"><div class="stat-label">Divisions</div><div class="stat-value" id="divisionCount">—</div><div class="stat-note">DOA · SWAT · Aucune</div></div>
   </section>
-
   <div class="toolbar">
     <input class="search" id="searchInput" placeholder="⌕ Rechercher un nom, matricule, ID...">
     <select class="filter" id="divisionFilter"><option value="">Toutes les divisions</option><option>DOA</option><option>SWAT</option><option>Aucune</option></select>
     <select class="filter" id="statusFilter"><option value="">Tous les statuts</option><option>Actif</option><option>Absence</option></select>
     <button id="clearFilters">Réinitialiser</button>
   </div>
-
   <section class="panel">
     <div class="panel-head"><h3>◈ Effectifs BCSO</h3><span class="count" id="resultCount">0 AGENT</span></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Agent</th><th>Matricule</th><th>Grade</th><th>Division</th><th>Statut</th><th>Formations</th><th>Spécialisations</th><th>Actions</th></tr></thead>
-        <tbody id="peopleTable"></tbody>
-      </table>
-    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Agent</th><th>Matricule</th><th>Grade</th><th>Division</th><th>Statut</th><th>Formations</th><th>Spécialisations</th><th>Actions</th></tr></thead>
+      <tbody id="peopleTable"></tbody>
+    </table></div>
     <div id="emptyState" class="empty" style="display:none">Aucun agent correspondant aux filtres.</div>
   </section>
   <p class="muted" style="font-size:10px;margin-top:18px;letter-spacing:1px">BCSO TACTICAL COMMAND · ACCÈS RÉSERVÉ · PERSONNEL</p>
@@ -205,40 +189,29 @@ tbody tr:hover{background:#23281e}
     <div><div class="eyebrow">Administration / Parc automobile</div><h2>Registre des véhicules</h2><div class="muted">Gestion du parc automobile · Blaine County Sheriff's Office</div></div>
     <button class="primary" id="addVehicleButton">＋ Nouveau véhicule</button>
   </div>
-
   <section class="stats">
     <div class="stat"><div class="stat-label">Véhicules total</div><div class="stat-value" id="vehicleTotal">—</div><div class="stat-note">Véhicules enregistrés</div></div>
     <div class="stat"><div class="stat-label">Attribués</div><div class="stat-value" id="vehicleAssigned">—</div><div class="stat-note">Véhicules attribués</div></div>
     <div class="stat"><div class="stat-label">Non attribués</div><div class="stat-value" id="vehicleUnassigned">—</div><div class="stat-note">Disponibles</div></div>
-    <div class="stat"><div class="stat-label">Types de véhicules</div><div class="stat-value" id="vehicleTypes">—</div><div class="stat-note">Catégories enregistrées</div></div>
+    <div class="stat"><div class="stat-label">Modèles</div><div class="stat-value" id="vehicleTypes">—</div><div class="stat-note">Modèles enregistrés</div></div>
   </section>
-
   <div class="toolbar">
-    <input class="search" id="vehicleSearch" placeholder="⌕ Rechercher un véhicule, une plaque, un agent...">
+    <input class="search" id="vehicleSearch" placeholder="⌕ Rechercher un modèle, une plaque, un agent...">
     <select class="filter" id="vehicleTypeFilter">
-      <option value="">Tous les types</option>
-      <option>Buffalo SPl</option><option>Scout Plu</option><option>Kandra Ml</option>
+      <option value="">Tous les modèles</option>
+      <option>Buffalo SPI</option><option>Scout PIU</option><option>Kandra MI</option>
       <option>Hélico Police V2</option><option>Police Riot</option><option>Insurgent Police</option>
     </select>
-    <select class="filter" id="vehicleAssignmentFilter">
-      <option value="">Toutes les affectations</option>
-      <option>DOA</option><option>SWAT</option><option>ASD</option><option>Mary</option><option>Patrouille</option>
-    </select>
-    <select class="filter" id="vehicleStatusFilter">
-      <option value="">Tous les statuts</option>
-      <option>Attribué</option><option>Non Attribué</option>
-    </select>
+    <select class="filter" id="vehicleAssignmentFilter"><option value="">Toutes les affectations</option><option>DOA</option><option>SWAT</option><option>ASD</option><option>Mary</option><option>Patrouille</option></select>
+    <select class="filter" id="vehicleStatusFilter"><option value="">Tous les statuts</option><option>Attribué</option><option>Non Attribué</option></select>
     <button id="clearVehicleFilters">Réinitialiser</button>
   </div>
-
   <section class="panel">
     <div class="panel-head"><h3>◈ Parc automobile BCSO</h3><span class="count" id="vehicleResultCount">0 VÉHICULE</span></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Véhicule</th><th>Plaque</th><th>Type</th><th>Affectation</th><th>Statut</th><th>Agent responsable</th><th>Actions</th></tr></thead>
-        <tbody id="vehiclesTable"></tbody>
-      </table>
-    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Modèle</th><th>Plaque</th><th>Affectation</th><th>Statut</th><th>Agent responsable</th><th>Actions</th></tr></thead>
+      <tbody id="vehiclesTable"></tbody>
+    </table></div>
     <div id="vehicleEmptyState" class="empty" style="display:none">Aucun véhicule correspondant aux filtres.</div>
   </section>
   <p class="muted" style="font-size:10px;margin-top:18px;letter-spacing:1px">BCSO TACTICAL COMMAND · ACCÈS RÉSERVÉ · VÉHICULES</p>
@@ -248,157 +221,121 @@ tbody tr:hover{background:#23281e}
 
 <!-- MODALE EMPLOYÉ -->
 <div id="modal">
-  <section class="modal-card">
-    <div class="modal-head"><div><div class="eyebrow">Dossier individuel</div><h2 id="modalTitle">Nouvel agent</h2></div><button type="button" id="closeModal">✕</button></div>
-    <form id="employeeForm">
-      <div class="modal-body">
-        <input type="hidden" id="employeeId">
-        <div class="form-grid">
-          <div class="section-label">01 / Identité</div>
-          <div class="field"><label for="firstName">Prénom *</label><input id="firstName" required maxlength="80"></div>
-          <div class="field"><label for="lastName">Nom *</label><input id="lastName" required maxlength="80"></div>
-          <div class="field"><label for="badge">Matricule *</label><input id="badge" required maxlength="30" placeholder="Ex. 1042"></div>
-          <div class="field"><label for="hireDate">Date d'embauche</label><input id="hireDate" type="date"></div>
-          <div class="field"><label for="gameId">ID en jeu</label><input id="gameId" maxlength="80"></div>
-          <div class="field"><label for="discordId">ID Discord</label><input id="discordId" maxlength="80"></div>
-          <div class="field full"><label for="photoUrl">Photo — URL</label><input id="photoUrl" type="url" placeholder="https://..."><input id="photoFile" type="file" accept="image/*" style="margin-top:8px"><img id="photoPreview" alt="Aperçu de la photo"><p class="muted" style="font-size:10px">L'import local est un aperçu. Pour enregistrer durablement une photo, configure Supabase Storage ou utilise une URL accessible.</p></div>
-          <div class="section-label">02 / Affectation</div>
-          <div class="field"><label for="grade">Grade *</label><select id="grade" required></select></div>
-          <div class="field"><label for="division">Division *</label><select id="division"><option>DOA</option><option>SWAT</option><option>Aucune</option></select></div>
-          <div class="field"><label for="status">Statut *</label><select id="status"><option>Actif</option><option>Absence</option></select></div>
-          <div class="field">
-            <label>Spécialisations</label>
-            <div class="check-grid" id="specializationsGrid">
-              <label class="check-item"><input type="checkbox" name="specialization" value="Air Support Unit"><span>Air Support Unit</span></label>
-              <label class="check-item"><input type="checkbox" name="specialization" value="K-9 Unit"><span>K-9 Unit</span></label>
-              <label class="check-item"><input type="checkbox" name="specialization" value="Traffic Division"><span>Traffic Division</span></label>
-              <label class="check-item"><input type="checkbox" name="specialization" value="Marine Unit"><span>Marine Unit</span></label>
-              <label class="check-item"><input type="checkbox" name="specialization" value="Media Relation Division"><span>Media Relation Division</span></label>
-              <label class="check-item"><input type="checkbox" name="specialization" value="Recruteur Formateur"><span>Recruteur Formateur</span></label>
-            </div>
-          </div>
-          <div class="field"><label for="absenceStart">Début d'absence</label><input id="absenceStart" type="date"></div>
-          <div class="field"><label for="absenceEnd">Fin d'absence</label><input id="absenceEnd" type="date"></div>
-          <div class="section-label">03 / Formations validées</div>
-          <div class="full"><div class="check-grid" id="trainingGrid"></div></div>
-        </div>
+<section class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">Dossier individuel</div><h2 id="modalTitle">Nouvel agent</h2></div><button type="button" id="closeModal">✕</button></div>
+  <form id="employeeForm">
+    <div class="modal-body">
+      <input type="hidden" id="employeeId">
+      <div class="form-grid">
+        <div class="section-label">01 / Identité</div>
+        <div class="field"><label for="firstName">Prénom *</label><input id="firstName" required maxlength="80"></div>
+        <div class="field"><label for="lastName">Nom *</label><input id="lastName" required maxlength="80"></div>
+        <div class="field"><label for="badge">Matricule *</label><input id="badge" required maxlength="30" placeholder="Ex. 1042"></div>
+        <div class="field"><label for="hireDate">Date d'embauche</label><input id="hireDate" type="date"></div>
+        <div class="field"><label for="gameId">ID en jeu</label><input id="gameId" maxlength="80"></div>
+        <div class="field"><label for="discordId">ID Discord</label><input id="discordId" maxlength="80"></div>
+        <div class="field full"><label for="photoUrl">Photo — URL</label><input id="photoUrl" type="url" placeholder="https://..."><input id="photoFile" type="file" accept="image/*" style="margin-top:8px"><img id="photoPreview" alt="Aperçu de la photo"><p class="muted" style="font-size:10px">L'import local est un aperçu. Pour enregistrer durablement une photo, configure Supabase Storage ou utilise une URL accessible.</p></div>
+        <div class="section-label">02 / Affectation</div>
+        <div class="field"><label for="grade">Grade *</label><select id="grade" required></select></div>
+        <div class="field"><label for="division">Division *</label><select id="division"><option>DOA</option><option>SWAT</option><option>Aucune</option></select></div>
+        <div class="field"><label for="status">Statut *</label><select id="status"><option>Actif</option><option>Absence</option></select></div>
+        <div class="field"><label>Spécialisations</label><div class="check-grid" id="specializationsGrid">
+          <label class="check-item"><input type="checkbox" name="specialization" value="Air Support Unit"><span>Air Support Unit</span></label>
+          <label class="check-item"><input type="checkbox" name="specialization" value="K-9 Unit"><span>K-9 Unit</span></label>
+          <label class="check-item"><input type="checkbox" name="specialization" value="Traffic Division"><span>Traffic Division</span></label>
+          <label class="check-item"><input type="checkbox" name="specialization" value="Marine Unit"><span>Marine Unit</span></label>
+          <label class="check-item"><input type="checkbox" name="specialization" value="Media Relation Division"><span>Media Relation Division</span></label>
+          <label class="check-item"><input type="checkbox" name="specialization" value="Recruteur Formateur"><span>Recruteur Formateur</span></label>
+        </div></div>
+        <div class="field"><label for="absenceStart">Début d'absence</label><input id="absenceStart" type="date"></div>
+        <div class="field"><label for="absenceEnd">Fin d'absence</label><input id="absenceEnd" type="date"></div>
+        <div class="section-label">03 / Formations validées</div>
+        <div class="full"><div class="check-grid" id="trainingGrid"></div></div>
       </div>
-      <div class="modal-foot"><button type="button" id="cancelButton">Annuler</button><button class="primary" type="submit" id="saveButton">Enregistrer le dossier</button></div>
-    </form>
-  </section>
+    </div>
+    <div class="modal-foot"><button type="button" id="cancelButton">Annuler</button><button class="primary" type="submit" id="saveButton">Enregistrer le dossier</button></div>
+  </form>
+</section>
 </div>
 
 <!-- MODALE VÉHICULE -->
 <div id="vehicleModal">
-  <section class="modal-card">
-    <div class="modal-head">
-      <div><div class="eyebrow">Parc automobile</div><h2 id="vehicleModalTitle">Nouveau véhicule</h2></div>
-      <button type="button" id="closeVehicleModal">✕</button>
-    </div>
-    <form id="vehicleForm">
-      <div class="modal-body">
-        <input type="hidden" id="vehicleId">
-        <div class="form-grid">
-          <div class="section-label">01 / Identification</div>
-          <div class="field"><label for="vehicleName">Nom du véhicule *</label><input id="vehicleName" required maxlength="100" placeholder="Ex. Buffalo Interceptor"></div>
-          <div class="field"><label for="vehiclePlate">Plaque d'immatriculation *</label><input id="vehiclePlate" required maxlength="30" placeholder="Ex. BCSO-104"></div>
-          <div class="field full">
-            <label for="vehicleType">Type de véhicule *</label>
-            <select id="vehicleType" required>
-              <option>Buffalo SPl</option><option>Scout Plu</option><option>Kandra Ml</option>
-              <option>Hélico Police V2</option><option>Police Riot</option><option>Insurgent Police</option>
-            </select>
-          </div>
-
-          <div class="section-label">02 / Affectation</div>
-          <div class="field"><label for="vehicleAssignment">Affectation *</label>
-            <select id="vehicleAssignment" required>
-              <option>DOA</option><option>SWAT</option><option>ASD</option><option>Mary</option><option>Patrouille</option>
-            </select>
-          </div>
-          <div class="field"><label for="vehicleStatus">Statut *</label>
-            <select id="vehicleStatus" required><option>Non Attribué</option><option>Attribué</option></select>
-          </div>
-          <div class="field full"><label for="vehicleAgent">Agent responsable</label><input id="vehicleAgent" maxlength="120" placeholder="Nom et prénom de l'agent"></div>
-
-          <div class="section-label">03 / Informations complémentaires</div>
-          <div class="field full"><label for="vehicleNotes">Remarques</label><textarea id="vehicleNotes" rows="4" placeholder="Informations complémentaires..."></textarea></div>
-          <div class="field full">
-            <label for="vehiclePhotoUrl">Photo du véhicule — URL</label>
-            <input id="vehiclePhotoUrl" type="url" placeholder="https://...">
-            <img id="vehiclePhotoPreview" alt="Aperçu du véhicule">
-            <p class="muted" style="font-size:10px">Utilise une URL d'image accessible. Les imports locaux ne sont pas conservés durablement.</p>
-          </div>
+<section class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">Parc automobile</div><h2 id="vehicleModalTitle">Nouveau véhicule</h2></div><button type="button" id="closeVehicleModal">✕</button></div>
+  <form id="vehicleForm">
+    <div class="modal-body">
+      <input type="hidden" id="vehicleId">
+      <div class="form-grid">
+        <div class="section-label">01 / Identification</div>
+        <div class="field full">
+          <label for="vehicleType">Modèle du véhicule *</label>
+          <select id="vehicleType" required>
+            <option>Buffalo SPI</option><option>Scout PIU</option><option>Kandra MI</option>
+            <option>Hélico Police V2</option><option>Police Riot</option><option>Insurgent Police</option>
+          </select>
+          <p class="muted" style="font-size:10px;margin-top:7px">Le modèle sert à identifier le véhicule : il n'est plus nécessaire de saisir un deuxième nom.</p>
         </div>
+        <div class="field full"><label for="vehiclePlate">Plaque d'immatriculation *</label><input id="vehiclePlate" required maxlength="30" placeholder="Ex. BCSO-104"></div>
+        <div class="section-label">02 / Affectation</div>
+        <div class="field"><label for="vehicleAssignment">Affectation *</label><select id="vehicleAssignment" required><option>DOA</option><option>SWAT</option><option>ASD</option><option>Mary</option><option>Patrouille</option></select></div>
+        <div class="field"><label for="vehicleStatus">Statut *</label><select id="vehicleStatus" required><option>Non Attribué</option><option>Attribué</option></select></div>
+        <div class="field full">
+          <label for="vehicleAgent">Agent responsable</label>
+          <select id="vehicleAgent"><option value="">Aucun agent sélectionné</option></select>
+          <p class="muted" style="font-size:10px;margin-top:7px">La liste est alimentée automatiquement par les agents enregistrés dans Employés.</p>
+        </div>
+        <div class="section-label">03 / Informations complémentaires</div>
+        <div class="field full"><label for="vehicleNotes">Remarques</label><textarea id="vehicleNotes" rows="4" placeholder="Informations complémentaires..."></textarea></div>
+        <div class="field full"><label for="vehiclePhotoUrl">Photo du véhicule — URL</label><input id="vehiclePhotoUrl" type="url" placeholder="https://..."><img id="vehiclePhotoPreview" alt="Aperçu du véhicule"><p class="muted" style="font-size:10px">Utilise une URL d'image accessible pour conserver la photo durablement.</p></div>
       </div>
-      <div class="modal-foot">
-        <button type="button" id="cancelVehicleButton">Annuler</button>
-        <button class="primary" type="submit" id="saveVehicleButton">Enregistrer le véhicule</button>
-      </div>
-    </form>
-  </section>
+    </div>
+    <div class="modal-foot"><button type="button" id="cancelVehicleButton">Annuler</button><button class="primary" type="submit" id="saveVehicleButton">Enregistrer le véhicule</button></div>
+  </form>
+</section>
 </div>
 
 <!-- FICHE EMPLOYÉ -->
 <div id="detailModal" class="detailModal">
-  <section class="detail-card">
-    <div class="detail-header">
-      <div><div class="eyebrow">BCSO / DOSSIER AGENT</div><h2>Fiche individuelle</h2></div>
-      <button type="button" id="closeDetail">✕ Fermer</button>
-    </div>
-    <div class="detail-identity">
-      <div class="detail-avatar" id="detailAvatar"></div>
-      <div><div class="detail-name" id="detailName">Agent</div><div class="detail-badges" id="detailBadges"></div></div>
-    </div>
-    <div class="detail-content" id="detailContent"></div>
-    <div class="detail-footer"><button type="button" id="closeDetailFooter">Fermer la fiche</button></div>
-  </section>
+<section class="detail-card">
+  <div class="detail-header"><div><div class="eyebrow">BCSO / DOSSIER AGENT</div><h2>Fiche individuelle</h2></div><button type="button" id="closeDetail">✕ Fermer</button></div>
+  <div class="detail-identity"><div class="detail-avatar" id="detailAvatar"></div><div><div class="detail-name" id="detailName">Agent</div><div class="detail-badges" id="detailBadges"></div></div></div>
+  <div class="detail-content" id="detailContent"></div>
+  <div class="detail-footer"><button type="button" id="closeDetailFooter">Fermer la fiche</button></div>
+</section>
 </div>
 
 <!-- FICHE VÉHICULE -->
 <div id="vehicleDetailModal" class="detailModal">
-  <section class="detail-card">
-    <div class="detail-header">
-      <div><div class="eyebrow">BCSO / PARC AUTOMOBILE</div><h2>Fiche véhicule</h2></div>
-      <button type="button" id="closeVehicleDetail">✕ Fermer</button>
-    </div>
-    <div class="detail-identity">
-      <div class="detail-avatar" id="vehicleDetailAvatar">V</div>
-      <div><div class="detail-name" id="vehicleDetailName">Véhicule</div><div class="detail-badges" id="vehicleDetailBadges"></div></div>
-    </div>
-    <div class="detail-content" id="vehicleDetailContent"></div>
-    <div class="detail-footer"><button type="button" id="closeVehicleDetailFooter">Fermer la fiche</button></div>
-  </section>
+<section class="detail-card">
+  <div class="detail-header"><div><div class="eyebrow">BCSO / PARC AUTOMOBILE</div><h2>Fiche véhicule</h2></div><button type="button" id="closeVehicleDetail">✕ Fermer</button></div>
+  <div class="detail-identity"><div class="detail-avatar" id="vehicleDetailAvatar">V</div><div><div class="detail-name" id="vehicleDetailName">Véhicule</div><div class="detail-badges" id="vehicleDetailBadges"></div></div></div>
+  <div class="detail-content" id="vehicleDetailContent"></div>
+  <div class="detail-footer"><button type="button" id="closeVehicleDetailFooter">Fermer la fiche</button></div>
+</section>
 </div>
 
 <div id="notice" role="status"></div>
 
 <script>
-const SUPABASE_URL = "https://nnyhchfpelmhhsjoklto.supabase.co";
-const SUPABASE_KEY = "sb_publishable_pIqMhTDyx6KRlLik-8GP4w_yIIedUrp";
-const TABLE = "employees";
-const VEHICLE_TABLE = "vehicles";
+const SUPABASE_URL="https://nnyhchfpelmhhsjoklto.supabase.co";
+const SUPABASE_KEY="sb_publishable_pIqMhTDyx6KRlLik-8GP4w_yIIedUrp";
+const TABLE="employees";
+const VEHICLE_TABLE="vehicles";
+const ACTIVE_VIEW_KEY="bcso_active_view";
 
-const GRADES = [
-  "Sheriff","Undersheriff","Lieutenant","Sergeant II","Sergeant I",
-  "Senior Deputy","Deputy III","Deputy II","Deputy I","Deputy Trainee"
-];
-const TRAININGS = [
-  "Procédure","Radio","MDT","Négociateur","Lead Terrain","Lead OP",
-  "First Lincoln","Conduite","Dispatcher","PPA I","PPA II","PPA III","PPA IV","PPA V"
-];
-const VEHICLE_TYPES = [
-  "Buffalo SPl","Scout Plu","Kandra Ml","Hélico Police V2","Police Riot","Insurgent Police"
-];
-const VEHICLE_ASSIGNMENTS = ["DOA","SWAT","ASD","Mary","Patrouille"];
+const GRADES=["Sheriff","Undersheriff","Lieutenant","Sergeant II","Sergeant I","Senior Deputy","Deputy III","Deputy II","Deputy I","Deputy Trainee"];
+const TRAININGS=["Procédure","Radio","MDT","Négociateur","Lead Terrain","Lead OP","First Lincoln","Conduite","Dispatcher","PPA I","PPA II","PPA III","PPA IV","PPA V"];
+const VEHICLE_TYPES=["Buffalo SPI","Scout PIU","Kandra MI","Hélico Police V2","Police Riot","Insurgent Police"];
 
-const $ = id => document.getElementById(id);
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-let people = [];
-let vehicles = [];
+const $=id=>document.getElementById(id);
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let people=[];
+let vehicles=[];
 let noticeTimer;
-let photoDataUrl = "";
+let photoDataUrl="";
+let activeView="employees";
+let currentUser=null;
+let loadingApp=false;
 
 function notify(message){
   $("notice").textContent=message;
@@ -407,32 +344,29 @@ function notify(message){
   noticeTimer=setTimeout(()=>$("notice").style.display="none",4000);
 }
 function esc(value){
-  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
 function parseList(value){
-  if(Array.isArray(value)) return value;
-  if(!value) return [];
-  try { const result=JSON.parse(value); return Array.isArray(result)?result:[]; }
-  catch { return String(value).split(",").map(x=>x.trim()).filter(Boolean); }
+  if(Array.isArray(value))return value;
+  if(!value)return [];
+  try{const result=JSON.parse(value);return Array.isArray(result)?result:[];}
+  catch{return String(value).split(",").map(x=>x.trim()).filter(Boolean);}
 }
-function gradeIndex(grade){
-  const i=GRADES.indexOf(grade);
-  return i<0?GRADES.length:i;
-}
-function fullName(p){return [p.first_name,p.last_name].filter(Boolean).join(" ") || p.name || "Agent sans nom";}
+function gradeIndex(grade){const i=GRADES.indexOf(grade);return i<0?GRADES.length:i;}
+function fullName(p){return [p.first_name,p.last_name].filter(Boolean).join(" ")||p.name||"Agent sans nom";}
 function initials(p){return fullName(p).split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase();}
-function imageUrl(p){return p.photo_url || p.photo || "";}
+function imageUrl(p){return p.photo_url||p.photo||"";}
 function renderPhoto(p){
   const url=imageUrl(p);
-  return url ? `<div class="avatar"><img src="${esc(url)}" alt="" onerror="this.parentElement.textContent='${esc(initials(p))}'"></div>` : `<div class="avatar">${esc(initials(p))}</div>`;
+  return url?`<div class="avatar"><img src="${esc(url)}" alt="" onerror="this.parentElement.textContent='${esc(initials(p))}'"></div>`:`<div class="avatar">${esc(initials(p))}</div>`;
 }
 function trainingBadges(p){
   const list=parseList(p.trainings);
-  return list.length ? `<div class="training-list">${list.map(x=>`<span class="training">${esc(x)}</span>`).join("")}</div>` : `<span class="muted">—</span>`;
+  return list.length?`<div class="training-list">${list.map(x=>`<span class="training">${esc(x)}</span>`).join("")}</div>`:`<span class="muted">—</span>`;
 }
 function specializationBadges(p){
   const list=parseList(p.specializations);
-  return list.length ? `<div class="training-list">${list.map(x=>`<span class="specialization">${esc(x)}</span>`).join("")}</div>` : `<span class="muted">—</span>`;
+  return list.length?`<div class="training-list">${list.map(x=>`<span class="specialization">${esc(x)}</span>`).join("")}</div>`:`<span class="muted">—</span>`;
 }
 function updateStats(){
   $("totalCount").textContent=people.length;
@@ -440,12 +374,10 @@ function updateStats(){
   $("absentCount").textContent=people.filter(p=>p.status==="Absence").length;
   $("divisionCount").textContent=new Set(people.map(p=>p.division).filter(x=>x&&x!=="Aucune")).size;
 }
-
 function render(){
   const q=$("searchInput").value.trim().toLowerCase();
   const div=$("divisionFilter").value;
   const status=$("statusFilter").value;
-
   const filtered=people.filter(p=>{
     const hay=[fullName(p),p.badge,p.game_id,p.discord_id,p.grade,p.division,...parseList(p.trainings),...parseList(p.specializations)].join(" ").toLowerCase();
     return hay.includes(q)&&(!div||p.division===div)&&(!status||p.status===status);
@@ -453,7 +385,6 @@ function render(){
 
   $("resultCount").textContent=`${filtered.length} AGENT${filtered.length===1?"":"S"}`;
   $("emptyState").style.display=filtered.length?"none":"block";
-
   let previousGrade=null;
   $("peopleTable").innerHTML=filtered.map(p=>{
     const rank=gradeIndex(p.grade);
@@ -462,20 +393,14 @@ function render(){
     const currentGrade=p.grade||"Non défini";
     const isNewGrade=currentGrade!==previousGrade;
     previousGrade=currentGrade;
-
     return `<tr class="${isNewGrade?"grade-group-start":""}">
       <td><div class="person">${renderPhoto(p)}<div><div class="person-name">${esc(fullName(p))}</div><div class="person-sub">${esc(p.discord_id||"ID Discord non renseigné")}</div></div></div></td>
       <td><strong>${esc(p.badge||"—")}</strong></td>
       <td><span class="pill rank-${rank}">${esc(currentGrade)}</span></td>
       <td><span class="pill ${divClass}">${esc(p.division||"Aucune")}</span></td>
       <td><span class="pill ${statusClass}">${esc(p.status||"Actif")}</span></td>
-      <td>${trainingBadges(p)}</td>
-      <td>${specializationBadges(p)}</td>
-      <td><div class="row-actions">
-        <button type="button" data-view="${esc(p.id)}">Fiche</button>
-        <button type="button" data-edit="${esc(p.id)}">Modifier</button>
-        <button type="button" class="danger" data-delete="${esc(p.id)}">✕</button>
-      </div></td>
+      <td>${trainingBadges(p)}</td><td>${specializationBadges(p)}</td>
+      <td><div class="row-actions"><button type="button" data-view="${esc(p.id)}">Fiche</button><button type="button" data-edit="${esc(p.id)}">Modifier</button><button type="button" class="danger" data-delete="${esc(p.id)}">✕</button></div></td>
     </tr>`;
   }).join("");
   updateStats();
@@ -486,16 +411,20 @@ async function load(){
   if(error){console.error(error);notify("Erreur de chargement employés : "+error.message);return;}
   people=data||[];
   render();
+  refreshAgentOptions();
   await loadVehicles();
 }
-
+async function loadVehicles(){
+  const {data,error}=await db.from(VEHICLE_TABLE).select("*");
+  if(error){console.error(error);notify("Erreur de chargement véhicules : "+error.message);return;}
+  vehicles=data||[];
+  renderVehicles();
+}
 function buildOptions(){
   $("grade").innerHTML=GRADES.map(g=>`<option>${esc(g)}</option>`).join("");
   $("trainingGrid").innerHTML=TRAININGS.map(t=>`<label class="check-item"><input type="checkbox" name="training" value="${esc(t)}"><span>${esc(t)}</span></label>`).join("");
 }
-function selectedValues(name){
-  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el=>el.value);
-}
+function selectedValues(name){return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el=>el.value);}
 function setChecked(name,values){
   const set=new Set(parseList(values));
   document.querySelectorAll(`input[name="${name}"]`).forEach(el=>el.checked=set.has(el.value));
@@ -558,7 +487,6 @@ $("status").addEventListener("change",()=>{
 $("employeeForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const id=$("employeeId").value;
-  const photoUrl=photoDataUrl||$("photoUrl").value.trim()||null;
   const record={
     first_name:$("firstName").value.trim(),
     last_name:$("lastName").value.trim(),
@@ -566,7 +494,7 @@ $("employeeForm").addEventListener("submit",async e=>{
     hire_date:$("hireDate").value||null,
     game_id:$("gameId").value.trim()||null,
     discord_id:$("discordId").value.trim()||null,
-    photo_url:photoUrl,
+    photo_url:photoDataUrl||$("photoUrl").value.trim()||null,
     grade:$("grade").value,
     division:$("division").value,
     status:$("status").value,
@@ -577,7 +505,6 @@ $("employeeForm").addEventListener("submit",async e=>{
   };
   if(record.status==="Absence"&&(!record.absence_start||!record.absence_end)){notify("Indique les dates de début et de fin d'absence.");return;}
   if(record.absence_start&&record.absence_end&&record.absence_end<record.absence_start){notify("La fin d'absence doit être après le début.");return;}
-
   $("saveButton").disabled=true;
   try{
     const result=id?await db.from(TABLE).update(record).eq("id",id):await db.from(TABLE).insert(record);
@@ -588,7 +515,6 @@ $("employeeForm").addEventListener("submit",async e=>{
   }catch(err){console.error(err);notify("Enregistrement impossible : "+err.message);}
   finally{$("saveButton").disabled=false;}
 });
-
 async function removePerson(id){
   const p=people.find(x=>String(x.id)===String(id));
   if(!p||!confirm(`Supprimer le dossier de ${fullName(p)} ?`))return;
@@ -597,7 +523,6 @@ async function removePerson(id){
   await load();
   notify("Dossier supprimé.");
 }
-
 function viewPerson(id){
   const p=people.find(x=>String(x.id)===String(id));
   if(!p)return;
@@ -606,109 +531,109 @@ function viewPerson(id){
   const url=imageUrl(p);
   const field=(label,value)=>`<div class="detail-field"><div class="detail-label">${esc(label)}</div><div class="detail-value">${esc(value||"Non renseigné")}</div></div>`;
   const tags=(items,emptyText)=>items.length?`<div class="detail-tags">${items.map(item=>`<span class="detail-tag">${esc(item)}</span>`).join("")}</div>`:`<div class="detail-empty">${esc(emptyText)}</div>`;
-
   $("detailName").textContent=fullName(p);
   $("detailAvatar").innerHTML=url?`<img src="${esc(url)}" alt="Photo de ${esc(fullName(p))}" onerror="this.parentElement.textContent='${esc(initials(p))}'">`:esc(initials(p));
-  $("detailBadges").innerHTML=`
-    <span class="pill rank-${gradeIndex(p.grade)}">${esc(p.grade||"Grade non défini")}</span>
-    <span class="pill ${p.division==="DOA"?"div-doa":p.division==="SWAT"?"div-swat":"div-none"}">${esc(p.division||"Aucune")}</span>
-    <span class="pill ${p.status==="Absence"?"status-absent":"status-active"}">${esc(p.status||"Actif")}</span>`;
+  $("detailBadges").innerHTML=`<span class="pill rank-${gradeIndex(p.grade)}">${esc(p.grade||"Grade non défini")}</span><span class="pill ${p.division==="DOA"?"div-doa":p.division==="SWAT"?"div-swat":"div-none"}">${esc(p.division||"Aucune")}</span><span class="pill ${p.status==="Absence"?"status-absent":"status-active"}">${esc(p.status||"Actif")}</span>`;
   $("detailContent").innerHTML=`
-    <section class="detail-section"><h3 class="detail-section-title">01 / IDENTITÉ ET CONTACT</h3><div class="detail-grid">
-      ${field("Matricule",p.badge)}${field("Date d'embauche",p.hire_date)}${field("ID en jeu",p.game_id)}${field("ID Discord",p.discord_id)}
-    </div></section>
-    <section class="detail-section"><h3 class="detail-section-title">02 / AFFECTATION ET ABSENCE</h3><div class="detail-grid">
-      ${field("Division",p.division||"Aucune")}${field("Statut",p.status||"Actif")}${field("Début d'absence",p.absence_start)}${field("Fin d'absence",p.absence_end)}
-    </div></section>
+    <section class="detail-section"><h3 class="detail-section-title">01 / IDENTITÉ ET CONTACT</h3><div class="detail-grid">${field("Matricule",p.badge)}${field("Date d'embauche",p.hire_date)}${field("ID en jeu",p.game_id)}${field("ID Discord",p.discord_id)}</div></section>
+    <section class="detail-section"><h3 class="detail-section-title">02 / AFFECTATION ET ABSENCE</h3><div class="detail-grid">${field("Division",p.division||"Aucune")}${field("Statut",p.status||"Actif")}${field("Début d'absence",p.absence_start)}${field("Fin d'absence",p.absence_end)}</div></section>
     <section class="detail-section"><h3 class="detail-section-title">03 / SPÉCIALISATIONS</h3>${tags(specs,"Aucune spécialisation attribuée")}</section>
     <section class="detail-section"><h3 class="detail-section-title">04 / FORMATIONS VALIDÉES</h3>${tags(trainings,"Aucune formation enregistrée")}</section>`;
   $("detailModal").style.display="flex";
 }
 function closeDetail(){$("detailModal").style.display="none";}
 
-/* MODULE VÉHICULES */
-
-async function loadVehicles(){
-  const {data,error}=await db.from(VEHICLE_TABLE).select("*");
-  if(error){console.error(error);notify("Erreur de chargement véhicules : "+error.message);return;}
-  vehicles=data||[];
-  renderVehicles();
+/* AGENTS RESPONSABLES : LISTE ISSUE DU REGISTRE EMPLOYÉS */
+function refreshAgentOptions(selectedId=""){
+  const select=$("vehicleAgent");
+  const previous=selectedId||select.value;
+  const sorted=[...people].sort((a,b)=>fullName(a).localeCompare(fullName(b),"fr"));
+  select.innerHTML='<option value="">Aucun agent sélectionné</option>'+sorted.map(p=>{
+    const label=`${fullName(p)}${p.badge?" · "+p.badge:""}`;
+    return `<option value="${esc(p.id)}">${esc(label)}</option>`;
+  }).join("");
+  if(previous&&sorted.some(p=>String(p.id)===String(previous)))select.value=String(previous);
 }
 
+/* MODULE VÉHICULES */
 function renderVehicles(){
   const q=$("vehicleSearch").value.trim().toLowerCase();
   const type=$("vehicleTypeFilter").value;
   const assignment=$("vehicleAssignmentFilter").value;
   const status=$("vehicleStatusFilter").value;
-
   const filtered=vehicles.filter(v=>{
     const hay=[v.vehicle_name,v.license_plate,v.vehicle_type,v.assignment,v.status,v.responsible_agent,v.notes].join(" ").toLowerCase();
     return hay.includes(q)&&(!type||v.vehicle_type===type)&&(!assignment||v.assignment===assignment)&&(!status||v.status===status);
   }).sort((a,b)=>{
     const ai=VEHICLE_TYPES.indexOf(a.vehicle_type);
     const bi=VEHICLE_TYPES.indexOf(b.vehicle_type);
-    return ai-bi||String(a.vehicle_name).localeCompare(String(b.vehicle_name),"fr");
+    return ai-bi||String(a.license_plate).localeCompare(String(b.license_plate),"fr");
   });
-
   $("vehicleTotal").textContent=vehicles.length;
   $("vehicleAssigned").textContent=vehicles.filter(v=>v.status==="Attribué").length;
   $("vehicleUnassigned").textContent=vehicles.filter(v=>v.status==="Non Attribué").length;
   $("vehicleTypes").textContent=new Set(vehicles.map(v=>v.vehicle_type)).size;
   $("vehicleResultCount").textContent=`${filtered.length} VÉHICULE${filtered.length===1?"":"S"}`;
   $("vehicleEmptyState").style.display=filtered.length?"none":"block";
-
   let previousType=null;
   $("vehiclesTable").innerHTML=filtered.map(v=>{
-    const currentType=v.vehicle_type||"Type non défini";
+    const currentType=v.vehicle_type||"Modèle non défini";
     const isNew=currentType!==previousType;
     previousType=currentType;
     const statusClass=v.status==="Attribué"?"status-assigned":"status-unassigned";
     const assignmentClass=v.assignment==="DOA"?"div-doa":v.assignment==="SWAT"?"div-swat":"div-none";
+    const agent=resolveVehicleAgent(v);
     return `<tr class="${isNew?"vehicle-group-start":""}">
-      <td><div class="person">
-        <div class="avatar">${v.photo_url?`<img src="${esc(v.photo_url)}" alt="" onerror="this.parentElement.textContent='V'">`:"V"}</div>
-        <div><div class="person-name">${esc(v.vehicle_name)}</div><div class="person-sub">${esc(currentType)}</div></div>
-      </div></td>
+      <td><div class="person"><div class="avatar">${v.photo_url?`<img src="${esc(v.photo_url)}" alt="" onerror="this.parentElement.textContent='V'">`:"V"}</div><div><div class="person-name">${esc(currentType)}</div><div class="person-sub">Véhicule BCSO</div></div></div></td>
       <td><strong>${esc(v.license_plate||"—")}</strong></td>
-      <td><span class="pill rank-2">${esc(currentType)}</span></td>
-      <td><span class="pill ${assignmentClass}">${esc(v.assignment||"—")}</span></td>
+      <td><span class="pill rank-2">${esc(v.assignment||"—")}</span></td>
       <td><span class="pill ${statusClass}">${esc(v.status||"Non Attribué")}</span></td>
-      <td>${esc(v.responsible_agent||"—")}</td>
-      <td><div class="row-actions">
-        <button type="button" data-vehicle-view="${esc(v.id)}">Fiche</button>
-        <button type="button" data-vehicle-edit="${esc(v.id)}">Modifier</button>
-        <button type="button" class="danger" data-vehicle-delete="${esc(v.id)}">✕</button>
-      </div></td>
+      <td>${esc(agent||"—")}</td>
+      <td><div class="row-actions"><button type="button" data-vehicle-view="${esc(v.id)}">Fiche</button><button type="button" data-vehicle-edit="${esc(v.id)}">Modifier</button><button type="button" class="danger" data-vehicle-delete="${esc(v.id)}">✕</button></div></td>
     </tr>`;
   }).join("");
 }
-
+function resolveVehicleAgent(v){
+  if(v.responsible_agent_id){
+    const p=people.find(x=>String(x.id)===String(v.responsible_agent_id));
+    if(p)return fullName(p)+(p.badge?" · "+p.badge:"");
+  }
+  if(v.responsible_agent){
+    const p=people.find(x=>String(x.id)===String(v.responsible_agent));
+    if(p)return fullName(p)+(p.badge?" · "+p.badge:"");
+    return v.responsible_agent;
+  }
+  return "";
+}
 function openVehicleModal(v=null){
   $("vehicleForm").reset();
   $("vehicleId").value=v?.id??"";
   $("vehicleModalTitle").textContent=v?"Modifier le véhicule":"Nouveau véhicule";
   $("vehiclePhotoPreview").style.display="none";
   $("vehiclePhotoPreview").src="";
-
+  refreshAgentOptions(v?.responsible_agent_id||v?.responsible_agent||"");
   if(v){
-    $("vehicleName").value=v.vehicle_name||"";
-    $("vehiclePlate").value=v.license_plate||"";
     $("vehicleType").value=v.vehicle_type||VEHICLE_TYPES[0];
+    $("vehiclePlate").value=v.license_plate||"";
     $("vehicleAssignment").value=v.assignment||"Patrouille";
     $("vehicleStatus").value=v.status||"Non Attribué";
-    $("vehicleAgent").value=v.responsible_agent||"";
     $("vehicleNotes").value=v.notes||"";
     $("vehiclePhotoUrl").value=v.photo_url||"";
     if(v.photo_url){$("vehiclePhotoPreview").src=v.photo_url;$("vehiclePhotoPreview").style.display="block";}
+    if(v.status==="Non Attribué")$("vehicleAgent").value="";
   }else{
     $("vehicleType").value=VEHICLE_TYPES[0];
     $("vehicleAssignment").value="Patrouille";
     $("vehicleStatus").value="Non Attribué";
+    $("vehicleAgent").value="";
   }
   $("vehicleModal").style.display="flex";
 }
 function closeVehicleModal(){$("vehicleModal").style.display="none";}
 
+$("vehicleStatus").addEventListener("change",()=>{
+  if($("vehicleStatus").value==="Non Attribué")$("vehicleAgent").value="";
+});
 $("vehiclePhotoUrl").addEventListener("input",()=>{
   const url=$("vehiclePhotoUrl").value.trim();
   $("vehiclePhotoPreview").style.display=url?"block":"none";
@@ -718,19 +643,24 @@ $("vehiclePhotoUrl").addEventListener("input",()=>{
 $("vehicleForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const id=$("vehicleId").value;
+  const agentId=$("vehicleAgent").value||null;
+  const agent=agentId?people.find(p=>String(p.id)===String(agentId)):null;
+  const status=$("vehicleStatus").value;
+  if(status==="Attribué"&&!agentId){
+    notify("Sélectionne un agent responsable pour un véhicule attribué.");
+    return;
+  }
   const record={
-    vehicle_name:$("vehicleName").value.trim(),
-    license_plate:$("vehiclePlate").value.trim(),
+    vehicle_name:$("vehicleType").value,
     vehicle_type:$("vehicleType").value,
+    license_plate:$("vehiclePlate").value.trim(),
     assignment:$("vehicleAssignment").value,
-    status:$("vehicleStatus").value,
-    responsible_agent:$("vehicleAgent").value.trim()||null,
+    status,
+    responsible_agent_id:status==="Attribué"?agentId:null,
+    responsible_agent:status==="Attribué"&&agent?fullName(agent):null,
     notes:$("vehicleNotes").value.trim()||null,
     photo_url:$("vehiclePhotoUrl").value.trim()||null
   };
-
-  if(record.status==="Non Attribué")record.responsible_agent=null;
-
   $("saveVehicleButton").disabled=true;
   try{
     const result=id
@@ -748,63 +678,45 @@ $("vehicleForm").addEventListener("submit",async e=>{
 
 async function removeVehicle(id){
   const v=vehicles.find(x=>String(x.id)===String(id));
-  if(!v||!confirm(`Supprimer le véhicule ${v.vehicle_name} (${v.license_plate}) ?`))return;
+  if(!v||!confirm(`Supprimer le véhicule ${v.vehicle_type} (${v.license_plate}) ?`))return;
   const {error}=await db.from(VEHICLE_TABLE).delete().eq("id",id);
   if(error){notify("Suppression impossible : "+error.message);return;}
   await loadVehicles();
   notify("Véhicule supprimé.");
 }
-
 function viewVehicle(id){
   const v=vehicles.find(x=>String(x.id)===String(id));
   if(!v)return;
-
-  $("vehicleDetailName").textContent=v.vehicle_name||"Véhicule";
-  $("vehicleDetailAvatar").innerHTML=v.photo_url
-    ?`<img src="${esc(v.photo_url)}" alt="${esc(v.vehicle_name)}">`
-    :"V";
-
+  const agent=resolveVehicleAgent(v);
+  $("vehicleDetailName").textContent=v.vehicle_type||"Véhicule";
+  $("vehicleDetailAvatar").innerHTML=v.photo_url?`<img src="${esc(v.photo_url)}" alt="${esc(v.vehicle_type)}">`:"V";
   $("vehicleDetailBadges").innerHTML=`
-    <span class="pill rank-2">${esc(v.vehicle_type||"Type non défini")}</span>
+    <span class="pill rank-2">${esc(v.vehicle_type||"Modèle non défini")}</span>
     <span class="pill ${v.assignment==="DOA"?"div-doa":v.assignment==="SWAT"?"div-swat":"div-none"}">${esc(v.assignment||"—")}</span>
     <span class="pill ${v.status==="Attribué"?"status-assigned":"status-unassigned"}">${esc(v.status||"Non Attribué")}</span>`;
-
   const field=(label,value)=>`<div class="detail-field"><div class="detail-label">${esc(label)}</div><div class="detail-value">${esc(value||"Non renseigné")}</div></div>`;
-
   $("vehicleDetailContent").innerHTML=`
-    <section class="detail-section">
-      <h3 class="detail-section-title">01 / IDENTIFICATION</h3>
-      <div class="detail-grid">
-        ${field("Nom du véhicule",v.vehicle_name)}
-        ${field("Plaque d'immatriculation",v.license_plate)}
-        ${field("Type de véhicule",v.vehicle_type)}
-      </div>
-    </section>
-    <section class="detail-section">
-      <h3 class="detail-section-title">02 / AFFECTATION</h3>
-      <div class="detail-grid">
-        ${field("Affectation",v.assignment)}
-        ${field("Statut",v.status)}
-        ${field("Agent responsable",v.responsible_agent)}
-      </div>
-    </section>
-    <section class="detail-section">
-      <h3 class="detail-section-title">03 / INFORMATIONS COMPLÉMENTAIRES</h3>
-      <div class="detail-grid">${field("Remarques",v.notes)}</div>
-    </section>
+    <section class="detail-section"><h3 class="detail-section-title">01 / IDENTIFICATION</h3><div class="detail-grid">${field("Modèle",v.vehicle_type)}${field("Plaque d'immatriculation",v.license_plate)}</div></section>
+    <section class="detail-section"><h3 class="detail-section-title">02 / AFFECTATION</h3><div class="detail-grid">${field("Affectation",v.assignment)}${field("Statut",v.status)}${field("Agent responsable",agent)}</div></section>
+    <section class="detail-section"><h3 class="detail-section-title">03 / INFORMATIONS COMPLÉMENTAIRES</h3><div class="detail-grid">${field("Remarques",v.notes)}</div></section>
     ${v.photo_url?`<section class="detail-section"><h3 class="detail-section-title">04 / PHOTO DU VÉHICULE</h3><img class="detail-photo" src="${esc(v.photo_url)}" alt="Photo du véhicule"></section>`:""}`;
-
   $("vehicleDetailModal").style.display="flex";
 }
 function closeVehicleDetail(){$("vehicleDetailModal").style.display="none";}
 
-/* NAVIGATION */
+/* NAVIGATION : LA CATÉGORIE ACTIVE EST CONSERVÉE */
 function showView(view){
-  const employees=view==="employees";
+  activeView=view==="vehicles"?"vehicles":"employees";
+  try{localStorage.setItem(ACTIVE_VIEW_KEY,activeView);}catch(e){}
+  const employees=activeView==="employees";
   $("employeesView").style.display=employees?"block":"none";
   $("vehiclesView").style.display=employees?"none":"block";
   $("employeesTab").classList.toggle("nav-active",employees);
   $("vehiclesTab").classList.toggle("nav-active",!employees);
+}
+function getSavedView(){
+  try{return localStorage.getItem(ACTIVE_VIEW_KEY)==="vehicles"?"vehicles":"employees";}
+  catch(e){return "employees";}
 }
 
 /* ÉVÉNEMENTS EMPLOYÉS */
@@ -820,10 +732,7 @@ $("searchInput").addEventListener("input",render);
 $("divisionFilter").addEventListener("change",render);
 $("statusFilter").addEventListener("change",render);
 $("clearFilters").addEventListener("click",()=>{
-  $("searchInput").value="";
-  $("divisionFilter").value="";
-  $("statusFilter").value="";
-  render();
+  $("searchInput").value="";$("divisionFilter").value="";$("statusFilter").value="";render();
 });
 $("addButton").addEventListener("click",()=>openModal());
 $("closeModal").addEventListener("click",closeModal);
@@ -844,11 +753,7 @@ $("vehicleTypeFilter").addEventListener("change",renderVehicles);
 $("vehicleAssignmentFilter").addEventListener("change",renderVehicles);
 $("vehicleStatusFilter").addEventListener("change",renderVehicles);
 $("clearVehicleFilters").addEventListener("click",()=>{
-  $("vehicleSearch").value="";
-  $("vehicleTypeFilter").value="";
-  $("vehicleAssignmentFilter").value="";
-  $("vehicleStatusFilter").value="";
-  renderVehicles();
+  $("vehicleSearch").value="";$("vehicleTypeFilter").value="";$("vehicleAssignmentFilter").value="";$("vehicleStatusFilter").value="";renderVehicles();
 });
 $("addVehicleButton").addEventListener("click",()=>openVehicleModal());
 $("closeVehicleModal").addEventListener("click",closeVehicleModal);
@@ -862,21 +767,19 @@ $("detailModal").addEventListener("click",e=>{if(e.target===$("detailModal"))clo
 $("closeVehicleDetail").addEventListener("click",closeVehicleDetail);
 $("closeVehicleDetailFooter").addEventListener("click",closeVehicleDetail);
 $("vehicleDetailModal").addEventListener("click",e=>{if(e.target===$("vehicleDetailModal"))closeVehicleDetail();});
-
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){
-    closeDetail();
-    closeVehicleDetail();
-    closeModal();
-    closeVehicleModal();
-  }
+  if(e.key==="Escape"){closeDetail();closeVehicleDetail();closeModal();closeVehicleModal();}
 });
 
-/* NAVIGATION ET CONNEXION */
+/* NAVIGATION ET AUTHENTIFICATION */
 $("employeesTab").addEventListener("click",()=>showView("employees"));
 $("vehiclesTab").addEventListener("click",()=>showView("vehicles"));
-$("refreshButton").addEventListener("click",load);
-
+$("refreshButton").addEventListener("click",async()=>{
+  $("refreshButton").disabled=true;
+  await load();
+  $("refreshButton").disabled=false;
+  notify("Données actualisées.");
+});
 $("logoutButton").addEventListener("click",async()=>{
   const {error}=await db.auth.signOut();
   if(error)notify(error.message);
@@ -892,33 +795,49 @@ $("loginForm").addEventListener("submit",async e=>{
       password:$("password").value
     });
     if(error)throw error;
-    showApp(data.user);
+    if(data.user)showApp(data.user);
   }catch(err){
     $("loginError").textContent="Connexion impossible : "+err.message;
   }finally{$("loginButton").disabled=false;}
 });
 
 function showApp(user){
+  currentUser=user;
   $("login").style.display="none";
   $("app").style.display="block";
   $("userLabel").textContent=user.email||"Utilisateur connecté";
-  showView("employees");
-  load();
+  showView(getSavedView());
+  if(!loadingApp){
+    loadingApp=true;
+    load().finally(()=>{loadingApp=false;});
+  }
 }
 function showLogin(){
+  currentUser=null;
+  loadingApp=false;
   $("app").style.display="none";
   $("login").style.display="grid";
 }
-
 db.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_IN"&&session?.user)showApp(session.user);
+  if(event==="SIGNED_IN"&&session?.user){
+    currentUser=session.user;
+    $("login").style.display="none";
+    $("app").style.display="block";
+    $("userLabel").textContent=session.user.email||"Utilisateur connecté";
+    showView(getSavedView());
+    if(!loadingApp){
+      loadingApp=true;
+      load().finally(()=>{loadingApp=false;});
+    }
+  }
   if(event==="SIGNED_OUT")showLogin();
 });
-
 async function init(){
   buildOptions();
+  showView(getSavedView());
   const {data,error}=await db.auth.getSession();
-  if(!error&&data.session)showApp(data.session.user);
+  if(error){console.error(error);return;}
+  if(data.session)showApp(data.session.user);
 }
 init();
 </script>
