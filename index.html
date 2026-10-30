@@ -122,6 +122,10 @@ tbody tr:hover{background:#23281e}
 .vehicle-model-card{padding:13px;border:1px solid var(--border);background:#151812;border-radius:8px}
 .vehicle-model-card strong{display:block;font-size:13px;margin-bottom:5px}
 .vehicle-model-card small{color:var(--muted);font-size:10px}
+.vehicle-model-name {
+  color: var(--olive2);
+  font-weight: 900;
+}
 @media(max-width:850px){main{padding:18px 14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:15px}.check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:550px){.form-grid{grid-template-columns:1fr}.full,.section-label{grid-column:auto}.check-grid{grid-template-columns:1fr}.page-title h2{font-size:22px}.brand h1{font-size:13px}.stats{gap:8px}.stat{padding:13px}.stat-value{font-size:25px}.detail-identity,.detail-content{padding:16px}.detail-avatar{width:65px;height:65px}.detail-name{font-size:18px}.detail-grid{grid-template-columns:1fr}.detailModal{padding:8px;align-items:flex-start}}
 </style>
@@ -584,7 +588,7 @@ function renderVehicles(){
     const assignmentClass=v.assignment==="DOA"?"div-doa":v.assignment==="SWAT"?"div-swat":"div-none";
     const agent=resolveVehicleAgent(v);
     return `<tr class="${isNew?"vehicle-group-start":""}">
-      <td><div class="person"><div class="avatar">${v.photo_url?`<img src="${esc(v.photo_url)}" alt="" onerror="this.parentElement.textContent='V'">`:"V"}</div><div><div class="person-name">${esc(currentType)}</div><div class="person-sub">Véhicule BCSO</div></div></div></td>
+      <td><div class="person"><div class="avatar">${v.photo_url?`<img src="${esc(v.photo_url)}" alt="" onerror="this.parentElement.textContent='V'">`:"V"}</div><div><div class="person-name vehicle-model-name">${esc(currentType)}</div><div class="person-sub">Véhicule BCSO</div></div></div></td>
       <td><strong>${esc(v.license_plate||"—")}</strong></td>
       <td><span class="pill rank-2">${esc(v.assignment||"—")}</span></td>
       <td><span class="pill ${statusClass}">${esc(v.status||"Non Attribué")}</span></td>
